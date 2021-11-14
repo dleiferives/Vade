@@ -1,4 +1,3 @@
-/* -- commit2 */
 struct level gen_level(int id, int diff, int width, int height, int mobs)
 {
 	struct level l;
@@ -33,7 +32,7 @@ char get_char(struct level * l, int x, int y)
 	if(y>=l[0].size.y) return 0; 
 	if(x<0)				return 0; 
 	if(y<0)				return 0; 
-	return l.map[get_p(l,x,y)];
+	return l->map[get_level_p(l,x,y)];
 }
 
 int char_dist(struct level * l, int pos, int pos2)
@@ -59,7 +58,7 @@ int flood_char(struct level * l, int x, int y, char c)
 	// no? change it call on surrounding characters
 	if(get_char(l,x,y) != c)
 	{
-		l[0].map[get_p(l,x,y)] = c;
+		l[0].map[get_level_p(l,x,y)] = c;
 		flood_char(l,x+1,y,c);
 		flood_char(l,x,y+1,c);
 		flood_char(l,x-1,y,c);
@@ -90,7 +89,7 @@ int generate_room(struct level * l, unsigned int room_x, unsigned int room_y, un
 	{
 		for(int x =room_x; x < width+room_x; x++)
 		{
-			char cur = l[0].map[get_p(l,x,y)];
+			char cur = l[0].map[get_level_p(l,x,y)];
 			if(cur != '.')
 			{
 				if(c != '.')
@@ -102,7 +101,7 @@ int generate_room(struct level * l, unsigned int room_x, unsigned int room_y, un
 					return 2;
 				}
 			}
-			l[0].map[get_p(l,x,y)] = c;
+			l[0].map[get_level_p(l,x,y)] = c;
 		}
 	}
 	return 1;
@@ -149,7 +148,7 @@ int generate_paths(struct level * l, char in_c)
 	{
 		if((((l[0].map[i] >= 'a') && (l[0].map[i] <= 'z')) || ((l[0].map[i]>='A') && (l[0].map[i] <='Z')) ) && (l[0].map[i] != l[0].map[iterat_char_pos]))
 		{
-			int temp = char_dist(iterat_char_pos, i);
+			int temp = char_dist(l,iterat_char_pos, i);
 			if(temp < low_dist)
 			{
 				low_dist = temp;
@@ -157,9 +156,6 @@ int generate_paths(struct level * l, char in_c)
 			}
 		}
 	}
-	
-	if(DEBUG) l[0].map[iterat_char_pos] = '%';
-	if(DEBUG) l[0].map[low_dist_pos] = 'O';
 
 	int dx = (iterat_char_pos % l[0].size.x) - (low_dist_pos % l[0].size.x);
 	int dy = (iterat_char_pos / l[0].size.x) - (low_dist_pos / l[0].size.x);
@@ -170,13 +166,13 @@ int generate_paths(struct level * l, char in_c)
 	int cursor_y = low_dist_pos / l[0].size.x;
 	for(int y =0; y < (dy * y_sign); y++)
 	{
-		l[0].map[get_p(l,cursor_x,cursor_y)] = '+'; 
+		l[0].map[get_level_p(l,cursor_x,cursor_y)] = '+'; 
 		cursor_y += y_sign;
 	}
 
 	for(int x =0; x < (dx * x_sign); x++)
 	{
-		l[0].map[get_p(l,cursor_x,cursor_y)] = '+'; 
+		l[0].map[get_level_p(l,cursor_x,cursor_y)] = '+'; 
 		cursor_x += x_sign;
 	}
 }
@@ -189,9 +185,9 @@ int normalize_level(struct level * l)
 	{
 		for(int x =0; x < l[0].size.x; x++)
 		{
-			if(l[0].map[get_p(l,x,y)] != '.' )
+			if(l[0].map[get_level_p(l,x,y)] != '.' )
 			{
-				if(l[0].map[get_p(l,x,y)] < 'a')
+				if(l[0].map[get_level_p(l,x,y)] < 'a')
 				{
 
 				flood_char(l,x,y,flood_var);
@@ -214,7 +210,7 @@ int normalize_level(struct level * l)
 
 	for(int i =max; i >= 'a'; i--)
 	{
-		generate_paths(i);
+		generate_paths(l,i);
 	}
 
 	char flood_var2 = 'A';
@@ -222,9 +218,9 @@ int normalize_level(struct level * l)
 	{
 		for(int x =0; x < l[0].size.x; x++)
 		{
-			if(l[0].map[get_p(l,x,y)] != '.' )
+			if(l[0].map[get_level_p(l,x,y)] != '.' )
 			{
-				if((l[0].map[get_p(l,x,y)] > 'a') || (l[0].map[get_p(l,x,y)] == '+'))
+				if((l[0].map[get_level_p(l,x,y)] > 'a') || (l[0].map[get_level_p(l,x,y)] == '+'))
 				{
 
 				flood_char(l,x,y,flood_var2);
@@ -234,4 +230,9 @@ int normalize_level(struct level * l)
 			}
 		}
 	}
+}
 
+int generate_level(struct level * l, int diff)
+{
+
+}
