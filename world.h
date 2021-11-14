@@ -232,7 +232,7 @@ int normalize_level(struct level * l)
 	}
 }
 
-int generate_level(struct level * l, int diff)
+int generate_level_structure(struct level * l, int diff)
 {
 
 }
