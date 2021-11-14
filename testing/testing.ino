@@ -6,7 +6,6 @@
 #include "alloc.h"
 #include "input.h"
 
-
 int _main()
 {
 	setup_game();
@@ -118,10 +117,22 @@ int _main()
 	/* return 0; */
 }
 
+void * big_daddy_devang()
+{
+	void * result = calloc(sizeof(int)); 
+	(int*) result[0] = 1;
+	result = realloc(
+	return result;
+}
+
+
+
 #if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
 	void setup()
 	{
 		 _main();
+		 int * value = big_daddy_devang();
+		 int number_o_bytes = value[0];
 	}
 
 	void loop()

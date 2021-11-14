@@ -49,13 +49,10 @@ int char_dist(int pos, int pos2)
 
 	int dist = sqrt(((resultx2-resultx1) * (resultx2-resultx1)) + ((resulty2-resulty1) * (resulty2-resulty1)));
 	return dist;
-
 }
 
 int flood_char(int x, int y, char c)
 {
-	/* putchar(10); */
-	/* print_level(); */
 	// is this character illegal?
 	if(get_char(x,y) == c )
 	{
@@ -109,9 +106,6 @@ int generate_room(unsigned int room_x, unsigned int room_y, unsigned int width, 
 		}
 
 	}
-
-
-	/* print_level(); */
 	return 1;
 }
 
@@ -129,7 +123,6 @@ int gen_rand_room()
 
 int generate_paths(char in_c)
 {
-
 	/* cut path to closest thing that is not this value that is greater than 'a' */
 	/* find number of character */
 	int char_iterator =0;
