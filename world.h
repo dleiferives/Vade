@@ -338,9 +338,8 @@ void next_level(struct character * player)
 	/* destroy_level(&levels[cur_level]); */
 	cur_level +=1;		
 	generate_level_structure(cur_level,cur_level);
-	struct pos p_pos = get_rand_pos_of_char('.');
-	player->pos_screen.x = p_pos.x;
-	player->pos_screen.y = p_pos.y;
+	player->pos_screen.x = 1;
+	player->pos_screen.y = 1;
 	alloc_maps_for_level(levels[cur_level].size);
 	init_maps();
 	get_render_map();
