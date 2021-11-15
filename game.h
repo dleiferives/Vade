@@ -84,6 +84,7 @@ int character_action(struct character * player, struct pos p)
 			if((p.x == 0) && (p.y == 0))
 			{
 				s_time =0;
+				next_level(player);
 			}
 			break;
 	}
