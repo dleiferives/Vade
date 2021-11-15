@@ -213,9 +213,23 @@ void print_aud(struct pos p)
 	int l_y = levels[cur_level].size.y;
 	int width  = (AUD_WIDTH > l_x)  ? l_x : AUD_WIDTH; // width of level on screen
 	int height = (AUD_HEIGHT > l_y) ? l_y : AUD_HEIGHT; // height of level on screen
+	struct pos offsets = {AUD_WIDTH - width, AUD_HEIGHT - height};
+	struct pos final_pos;
+	final_pos.x = ((p.x+width)>l_x) ? l_x-width : p.x;
+	final_pos.y = ((p.y+height)>l_y) ? l_y-height : p.y;
 	printf("Width %i Height %i\n",width,height);
 	for(int i=0; i<AUD_WIDTH+2; i++) putchar('-');
 	putchar(10);
+	for(int y=0; y<height; y++)
+	{
+		for(int oy =0; oy < offsets.y; oy++) putchar(10);
+		for(int x=0; x<width; x++)
+		{
+			for(int ox =0; ox < offsets.x; ox++) putchar(' ');
+			putchar(get_char(&levels[cur_level],final_pos.x+x,final_pos.y+y));	
+		}
+		putchar(10);
+	}
 }
 
 void print_map(struct pos p)
