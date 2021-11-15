@@ -89,6 +89,10 @@ int _main()
 					// take action at player	
 					character_action(&player,to_pos(0,0));
 				}
+				if(temp_dir == 2)
+				{
+					next_level(&player);
+					}
 				break;
 
 		}
