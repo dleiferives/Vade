@@ -263,11 +263,29 @@ struct level * generate_level_structure(int id, int diff)
 			}
 		}
 	}
-
+	int floor_tiles=0;
 	for(int i=0; i<(diff_width*diff_height); i++)
 	{
 		if(levels[id].map[i] == '.') levels[id].map[i] = ' ';
-		if(levels[id].map[i] == 'A') levels[id].map[i] = '.';
+		if(levels[id].map[i] == 'A')
+		{
+			levels[id].map[i] = '.';
+			floor_tiles++;
+		}
+	}
+	floor_tiles = get_rand(floor_tiles,0)
+	int floor_tiles2 =0;
+	for(int i=0; i<(diff_width*diff_height); i++)
+	{
+		if(levels[id].map[i] == '.')
+		{
+			floor_tiles2++;
+		}
+		if(floor_tiles2 == floor_tiles)
+		{
+			levels[id].map[i] = '+';
+			break;
+		}
 	}
 }
 
@@ -276,5 +294,4 @@ void next_level()
 	destroy_level(&levels[cur_level]);
 	cur_level++;		
 	generate_level_structure(cur_level,cur_level);
-
 }
