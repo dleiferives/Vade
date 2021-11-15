@@ -221,9 +221,9 @@ int normalize_level(struct level * l)
 		}
 	}
 	char max2 =0;
-	for(int i =0; i < (level_x * level_y); i++)
+	for(int i =0; i < (l[0].size.x * l[0].size.y); i++)
 	{
-		max2 = (level[i] > max2) ? level[i] : max2;
+		max2 = (l[0].map[i] > max2) ? l[0].map[i] : max2;
 	}
 
 	if(max2 != 'A') normalize_level();
