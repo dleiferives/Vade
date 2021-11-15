@@ -110,6 +110,7 @@ int gen_rand_room(struct level * l)
 }
 
 int char_iterator_old =0;
+int char_iterator_old_old =1;
 int generate_paths(struct level * l, char in_c)
 {
 	seed_rand();
@@ -161,13 +162,13 @@ int generate_paths(struct level * l, char in_c)
 	int cursor_y = low_dist_pos / l[0].size.x;
 	for(int y =0; y < (dy * y_sign); y++)
 	{
-		l[0].map[get_level_p(l,cursor_x,cursor_y)] = '+'; 
+		l[0].map[get_level_p(l,cursor_x,cursor_y)] = '*'; 
 		cursor_y += y_sign;
 	}
 
 	for(int x =0; x < (dx * x_sign); x++)
 	{
-		l[0].map[get_level_p(l,cursor_x,cursor_y)] = '+'; 
+		l[0].map[get_level_p(l,cursor_x,cursor_y)] = '*'; 
 		cursor_x += x_sign;
 	}
 }
