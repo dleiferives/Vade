@@ -231,8 +231,10 @@ int normalize_level(struct level * l)
 	return 0;
 }
 
-struct level * generate_level_structure(int id, int diff)
+/* returns the position of the player in the new level */
+struct pos generate_level_structure(int id, int diff)
 {
+	struct pos result;
 	//dificulty 0 - 1000
 	//width 30 - 300
 	//height 20 - 200
@@ -274,6 +276,9 @@ struct level * generate_level_structure(int id, int diff)
 		}
 	}
 	floor_tiles = get_rand(floor_tiles,0);
+	int character_pos = get_rand(floor_tiles,0);
+	result.x = character_pos % levels[id].size.x;
+	result.y = character_pos / levels[id].size.x;
 	int floor_tiles2 =0;
 	for(int i=0; i<(diff_width*diff_height); i++)
 	{
@@ -289,7 +294,7 @@ struct level * generate_level_structure(int id, int diff)
 	}
 }
 
-void next_level()
+void next_level(struct character * player)
 {
 	destroy_level(&levels[cur_level]);
 	cur_level++;		
