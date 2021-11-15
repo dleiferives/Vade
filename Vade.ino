@@ -52,8 +52,8 @@ int _main()
 			case 1:
 				if(temp_dir == 3) levels[cur_level].lcd.y++;
 				if(temp_dir == 2) levels[cur_level].lcd.y--;
-				if(temp_dir == 1) levels[cur_level].lcd.x++;
-				if(temp_dir == 0) levels[cur_level].lcd.x--;
+				if(temp_dir == 0) levels[cur_level].lcd.x++;
+				if(temp_dir == 1) levels[cur_level].lcd.x--;
 				levels[cur_level].lcd.y = (levels[cur_level].lcd.y<0) ? 0 : levels[cur_level].lcd.y;
 				levels[cur_level].lcd.y = (levels[cur_level].lcd.y> levels[cur_level].size.y ) ? levels[cur_level].size.y  : levels[cur_level].lcd.y;
 				levels[cur_level].lcd.x = (levels[cur_level].lcd.x<0) ? 0 : levels[cur_level].lcd.x;
