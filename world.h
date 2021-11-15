@@ -297,7 +297,7 @@ struct pos generate_level_structure(int id, int diff)
 void next_level(struct character * player)
 {
 	destroy_level(&levels[cur_level]);
-	cur_level++;		
+	cur_level = 5;		
 	generate_level_structure(cur_level,cur_level);
 	init_maps();
 	get_render_map();
