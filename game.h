@@ -229,10 +229,10 @@ void print_aud(struct pos p)
 		{
 			putchar(get_char(&levels[cur_level],final_pos.x+x,final_pos.y+y));	
 		}
+			for(int ox =0; ox < offsets.x/2; ox++) putchar(' ');
+				putchar('|');
 		putchar(10);
 	}
-			for(int ox =0; ox < offsets.x/2; ox++) putchar(' ');
-		putchar('|');
 }
 
 void print_map(struct pos p)
