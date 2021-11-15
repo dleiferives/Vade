@@ -155,18 +155,29 @@ int generate_paths(struct level * l, char in_c)
 	int dy = (iterat_char_pos / l[0].size.x) - (low_dist_pos / l[0].size.x);
   int x_sign = (dx > 0) ? 1 : -1;
   int y_sign = (dy > 0) ? 1 : -1;
+	char c1 = l[0].map[iterat_char_pos];
+	char c2 = l[0].map[low_dist_pos];
+
 	
 	int cursor_x = low_dist_pos % l[0].size.x;
 	int cursor_y = low_dist_pos / l[0].size.x;
 	for(int y =0; y < (dy * y_sign); y++)
 	{
-		l[0].map[get_level_p(l,cursor_x,cursor_y)] = '*'; 
+		char tmp_char = l[0].map[get_level_p(l,cursor_x,cursor_y)]
+			if((tmp_char != c1) && (tmp_char !=c2))
+			{
+				l[0].map[get_level_p(l,cursor_x,cursor_y)] = '*'; 
+			}
 		cursor_y += y_sign;
 	}
 
 	for(int x =0; x < (dx * x_sign); x++)
 	{
-		l[0].map[get_level_p(l,cursor_x,cursor_y)] = '*'; 
+		char tmp_char = l[0].map[get_level_p(l,cursor_x,cursor_y)]
+			if((tmp_char != c1) && (tmp_char !=c2))
+			{
+				l[0].map[get_level_p(l,cursor_x,cursor_y)] = '*'; 
+			}
 		cursor_x += x_sign;
 	}
 }
