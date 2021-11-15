@@ -237,7 +237,7 @@ int normalize_level(struct level * l)
 		max2 = (l[0].map[i] > max2) ? l[0].map[i] : max2;
 	}
 
-	if((max2 != 'A') )
+	if((max2 != 'A') && (max2 != 'a'))
 	{
 		/* for(int y =0; y< levels[cur_level].size.y; y++) */
 		/* { */
@@ -247,7 +247,7 @@ int normalize_level(struct level * l)
 		/* 	} */
 		/* 	putchar(10); */
 		/* } */
-		printf("%i\n",max2);
+		/* printf("%i\n",max2); */
 		normalize_level(l);
 	}
 
