@@ -12,9 +12,8 @@
 /* <-- compiler definitions --> */
 #define PLAYER_INVENTORY_SIZE 20
 #define MOB_INV_BASE 1
-#define GEN_WIDTH  32
-#define GEN_HEIGHT 32
-#define GEN_MOBS   16
+#define AUD_WIDTH  60 
+#define AUD_HEIGHT 40 
 
 /* <-- struct definitions --> */
 struct pos
