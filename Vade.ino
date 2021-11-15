@@ -92,10 +92,7 @@ int _main()
 				if(temp_dir == 2)
 				{
 					next_level(&player);
-					next_level(&player);
-					next_level(&player);
-					next_level(&player);
-					}
+				}
 				break;
 
 		}
