@@ -45,8 +45,10 @@ void move_character(struct character * player,int x, int y)
 	if((player->pos_screen.x - 1) < 0) t_step=0;
 	if((player->pos_screen.y - 1) < 0) t_step=0;
 	if((player->pos_screen.y + 1) >= (levels[cur_level].size.y )) t_step=0;
+	puts("FUCKING SULS");
 	if(t_step !=0)
 	{
+	puts("FxxxxUCKING SULS");
 		if((levels[cur_level].
 					map[get_level_p(x+player->pos_screen.x,
 													y+player->pos_screen.y)]) 
@@ -56,6 +58,7 @@ void move_character(struct character * player,int x, int y)
 		}
 		if(t_step == 1)
 		{
+			puts("dkjdlfsj:FUCKING SULS");
 			player -> pos_screen_old = player[0].pos_screen;
 			player[0].pos_screen.x += x;
 			player[0].pos_screen.y += y;
