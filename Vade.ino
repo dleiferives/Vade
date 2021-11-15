@@ -30,7 +30,6 @@ int _main()
 	// gameplay loop
 	while(1)
 	{
-		for(int i=0; i < 100; i++){putchar(get_rand('z','a'));}
 		handle_input(); //input.h
 		reset_entity_map(); // game.h -- render
 		int temp_mode = get_mode(); //input.h
