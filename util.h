@@ -161,6 +161,8 @@ void * get_malloc(unsigned int size)
 	return tmp;
 }
 
+char get_char(struct level *l, int x, int y);
+
 struct pos to_pos(int x, int y)
 {
 	struct pos result = {x,y};
