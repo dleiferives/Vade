@@ -247,7 +247,7 @@ int normalize_level(struct level * l)
 			}
 			putchar(10);
 		}
-		printf("%i\n",max2);
+		printf("%i%c\n",max2,140);
 		normalize_level(l);
 	}
 
