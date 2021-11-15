@@ -40,7 +40,9 @@ int add_item(struct character * player, int item_id)
 
 char rel_char(struct pos p1, struct pos p2)
 {
-	return levels[cur_level].map[get_level_p(&levels[cur_level],p1.x+p1.x, p1.y+p2.y)];
+	char result = levels[cur_level].map[get_level_p(&levels[cur_level],p1.x+p1.x, p1.y+p2.y)];
+	putchar(result);
+	return result;
 }
 
 void move_character(struct character * player,int x, int y)
