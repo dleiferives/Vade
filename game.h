@@ -216,7 +216,9 @@ void print_aud(struct pos p)
 	struct pos offsets = {AUD_WIDTH - width, AUD_HEIGHT - height};
 	struct pos final_pos;
 	final_pos.x = ((p.x+width)>l_x) ? l_x-width : p.x;
+	final_pos.x = (final_pos.x < 0) ? 0 : final_pos.x;
 	final_pos.y = ((p.y+height)>l_y) ? l_y-height : p.y;
+	final_pos.y = (final_pos.y < 0) ? 0 : final_pos.y;
 	printf("Width %i Height %i\n",width,height);
 	printf("OWidth %i OHeight %i\n",offsets.x,offsets.y);
 	for(int i=0; i<AUD_WIDTH+2; i++) putchar('-');

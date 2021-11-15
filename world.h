@@ -349,5 +349,6 @@ void next_level(struct character * player)
 	alloc_maps_for_level(levels[cur_level].size);
 	init_maps();
 	get_render_map();
-		print_map(player->pos_screen);
+		levels[cur_level].lcd = player->pos_screen;
+		print_map(&levels[cur_level].lcd);
 }

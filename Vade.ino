@@ -106,7 +106,7 @@ int _main()
 
 		render_character(&player);
 		get_render_map();
-		print_map(player.pos_screen);
+		print_map(&levels[cur_level].lcd);
 
 	}
 	
