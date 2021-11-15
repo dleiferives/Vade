@@ -225,7 +225,7 @@ void print_aud(struct pos p)
 		/* for(int oy =0; oy < offsets.y; oy++) putchar(10); */
 		for(int x=0; x<width; x++)
 		{
-			/* for(int ox =0; ox < offsets.x; ox++) putchar(' '); */
+			for(int ox =0; ox < offsets.x; ox++) putchar(' ');
 			putchar(get_char(&levels[cur_level],final_pos.x+x,final_pos.y+y));	
 		}
 		putchar(10);
