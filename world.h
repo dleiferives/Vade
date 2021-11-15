@@ -268,6 +268,7 @@ struct pos generate_level_structure(int id, int diff)
 	puts("4");
 	normalize_level(&levels[id]);
 	struct level * l = &levels[id];
+	puts("5");
 	for(int y =0; y < diff_height; y++)
 	{
 		for(int x =0; x < diff_width; x++)
