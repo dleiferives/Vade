@@ -236,7 +236,7 @@ struct level * generate_level_structure(int id, int diff)
 	{
 		gen_rand_room(&levels[id]);	
 	}
-	normalize_level(&levels[id]);
-	get_render_map();
+	/* normalize_level(&levels[id]); */
+	/* get_render_map(); */
 	/* print_map(levels[id].lcd); */
 }
