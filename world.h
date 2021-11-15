@@ -272,11 +272,14 @@ struct pos generate_level_structure(int id, int diff)
 	for(int j=0; j< diff_rooms;j++)
 	{
 			gen_rand_room(&levels[id]);	
-		/* normalize_level(&levels[id]); */
-	}
-	for(int j=0; j< diff_rooms;j++)
-	{
-			gen_rand_room(&levels[id]);	
+		for(int y =0; y< levels[cur_level].size.y; y++)
+		{
+			for(int x =0; x< levels[cur_level].size.x; x++)
+			{
+				putchar(levels[cur_level].map[get_level_p(&levels[cur_level],x,y)]);
+			}
+			putchar(10);
+		}
 		/* normalize_level(&levels[id]); */
 	}
 	normalize_level(&levels[id]);
