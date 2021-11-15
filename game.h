@@ -52,7 +52,7 @@ void move_character(struct character * player,int x, int y)
 	if((player->pos_screen.y + 1) >= (levels[cur_level].size.y )) t_step=0;
 	if(t_step !=0)
 	{
-		if(rel_char(player->pos_screen,{x,y}) == '#')
+		if(rel_char(player->pos_screen,to_pos(x,y)) == '#')
 		{ 
 			t_step = 0;
 		}

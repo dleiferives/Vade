@@ -159,6 +159,11 @@ void * get_malloc(unsigned int size)
 	return tmp;
 }
 
+struct pos to_pos(int x, int y)
+{
+	struct pos result = {x,y};
+	return result;
+}
 #if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
 	void callInteruptM2()
 	{
