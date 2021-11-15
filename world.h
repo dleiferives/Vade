@@ -250,7 +250,7 @@ int normalize_level(struct level * l)
 		{
 			for(int x =0; x< levels[cur_level].size.x; x++)
 			{
-				putchar(levels[cur_level].map[get_level_p(x,y)]);
+				putchar(levels[cur_level].map[get_level_p(&levels[cur_level],x,y)]);
 			}
 			putchar(10);
 		}
