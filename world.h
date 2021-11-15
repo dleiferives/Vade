@@ -315,7 +315,7 @@ struct pos get_rand_pos_of_char(char c)
 		if(levels[cur_level].map[i] == c) num++;
 	}
 	seed_rand();
-	int num2 = get_rand(num1,1);
+	int num2 = get_rand(num,1);
 	num =0;
 	for(int i =0; i <levels[cur_level].size.x * levels[cur_level].size.y; i++)
 	{
