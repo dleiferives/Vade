@@ -239,15 +239,15 @@ int normalize_level(struct level * l)
 
 	if((max2 != 'A') )
 	{
-		for(int y =0; y< levels[cur_level].size.y; y++)
-		{
-			for(int x =0; x< levels[cur_level].size.x; x++)
-			{
-				putchar(levels[cur_level].map[get_level_p(&levels[cur_level],x,y)]);
-			}
-			putchar(10);
-		}
-		printf("%i\n",max2);
+		/* for(int y =0; y< levels[cur_level].size.y; y++) */
+		/* { */
+		/* 	for(int x =0; x< levels[cur_level].size.x; x++) */
+		/* 	{ */
+		/* 		putchar(levels[cur_level].map[get_level_p(&levels[cur_level],x,y)]); */
+		/* 	} */
+		/* 	putchar(10); */
+		/* } */
+		/* printf("%i\n",max2); */
 		normalize_level(l);
 	}
 
@@ -271,15 +271,6 @@ struct pos generate_level_structure(int id, int diff)
 	for(int j=0; j< diff_rooms;j++)
 	{
 			gen_rand_room(&levels[id]);	
-		/* for(int y =0; y< levels[cur_level].size.y; y++) */
-		/* { */
-		/* 	for(int x =0; x< levels[cur_level].size.x; x++) */
-		/* 	{ */
-		/* 		putchar(levels[cur_level].map[get_level_p(&levels[cur_level],x,y)]); */
-		/* 	} */
-		/* 	putchar(10); */
-		/* } */
-		/* if(j%10 ==0) normalize_level(&levels[id]); */
 	}
 	normalize_level(&levels[id]);
 	struct level * l = &levels[id];
