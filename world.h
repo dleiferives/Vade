@@ -220,6 +220,15 @@ int normalize_level(struct level * l)
 			}
 		}
 	}
+	char max2 =0;
+	for(int i =0; i < (level_x * level_y); i++)
+	{
+		max2 = (level[i] > max2) ? level[i] : max2;
+	}
+
+	if(max2 != 'A') normalize_level();
+
+	return 0;
 }
 
 struct level * generate_level_structure(int id, int diff)
