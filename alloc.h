@@ -49,7 +49,8 @@ void setup_game()
 
 	/* util.h */
   #if defined(WIN32)
-		srand((unsigned) time(0));
+		time_t random_time_generator;
+		srand((unsigned) time(random_time_generator));
   #endif
 
 }
