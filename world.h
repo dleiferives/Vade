@@ -239,15 +239,15 @@ int normalize_level(struct level * l)
 
 	if((max2 != 'A') && (max2 != 'a'))
 	{
-		/* for(int y =0; y< levels[cur_level].size.y; y++) */
-		/* { */
-		/* 	for(int x =0; x< levels[cur_level].size.x; x++) */
-		/* 	{ */
-		/* 		putchar(levels[cur_level].map[get_level_p(&levels[cur_level],x,y)]); */
-		/* 	} */
-		/* 	putchar(10); */
-		/* } */
-		/* printf("%i\n",max2); */
+		for(int y =0; y< levels[cur_level].size.y; y++)
+		{
+			for(int x =0; x< levels[cur_level].size.x; x++)
+			{
+				putchar(levels[cur_level].map[get_level_p(&levels[cur_level],x,y)]);
+			}
+			putchar(10);
+		}
+		printf("%i\n",max2);
 		normalize_level(l);
 	}
 
@@ -352,5 +352,5 @@ void next_level(struct character * player)
 	alloc_maps_for_level(levels[cur_level].size);
 	init_maps();
 	get_render_map();
-		print_map(levels[cur_level].lcd);
+	print_map(levels[cur_level].lcd);
 }
