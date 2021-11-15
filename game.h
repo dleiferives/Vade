@@ -211,7 +211,7 @@ void print_aud(struct pos p)
 {
 	int l_x = levels[cur_level].size.x;
 	int l_y = levels[cur_level].size.y;
-	int width  = (AUD_WIDTH > l_x)  ? l_x : AUD_WIDTH; // width of level on screen
+	int width  = (AUD_WIDTH < l_x)  ? l_x : AUD_WIDTH; // width of level on screen
 	int height = (AUD_HEIGHT < l_y) ? l_y : AUD_HEIGHT; // height of level on screen
 	struct pos offsets = {AUD_WIDTH - width, AUD_HEIGHT - height};
 	struct pos final_pos;
