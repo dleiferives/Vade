@@ -188,7 +188,6 @@ int normalize_level(struct level * l)
 		}
 	}
 
-	puts("BETA");
 	char max =0;
 	for(int i =0; i < (l[0].size.x * l[0].size.y); i++)
 	{
@@ -201,6 +200,7 @@ int normalize_level(struct level * l)
 		generate_paths(l,i);
 	}
 
+	puts("BETA");
 	char flood_var2 = 'A';
 	for(int y =0; y < l[0].size.y; y++)
 	{
