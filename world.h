@@ -112,6 +112,7 @@ int gen_rand_room(struct level * l)
 
 int generate_paths(struct level * l, char in_c)
 {
+	seed_rand();
 	/* cut path to closest thing that is not this value that is greater than 'a' */
 	/* find number of character */
 	puts("1");
