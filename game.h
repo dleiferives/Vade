@@ -218,6 +218,7 @@ void print_aud(struct pos p)
 	final_pos.x = ((p.x+width)>l_x) ? l_x-width : p.x;
 	final_pos.y = ((p.y+height)>l_y) ? l_y-height : p.y;
 	printf("Width %i Height %i\n",width,height);
+	printf("OWidth %i OHeight %i\n",offsets.x,offsets.y);
 	for(int i=0; i<AUD_WIDTH+2; i++) putchar('-');
 	putchar(10);
 	for(int y=0; y<height; y++)
