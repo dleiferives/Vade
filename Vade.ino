@@ -90,7 +90,7 @@ int _main()
 		render_character(&player);
 		get_render_map();
 		print_map(levels[cur_level].lcd);
-		for(int i=0; i < 100; i++){putchar(get_rand('z','a');}
+		for(int i=0; i < 100; i++){putchar(get_rand('z','a'));}
 
 	}
 	
