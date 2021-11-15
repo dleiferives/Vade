@@ -170,6 +170,7 @@ int generate_paths(struct level * l, char in_c)
 
 int normalize_level(struct level * l)
 {
+	puts("ALPHA");
 	char flood_var = 'a';
 	for(int y =0; y < l[0].size.y; y++)
 	{
@@ -188,15 +189,12 @@ int normalize_level(struct level * l)
 		}
 	}
 
+	puts("BETA");
 	char max =0;
 	for(int i =0; i < (l[0].size.x * l[0].size.y); i++)
 	{
 		max = (l[0].map[i] > max) ? l[0].map[i] : max;
 	}
-
-	/* print_level(); */
-	/* putchar(10); */
-	/* putchar(max); */
 
 	for(int i =max; i >= 'a'; i--)
 	{
@@ -220,6 +218,7 @@ int normalize_level(struct level * l)
 			}
 		}
 	}
+	puts("THETA");
 	char max2 =0;
 	for(int i =0; i < (l[0].size.x * l[0].size.y); i++)
 	{
