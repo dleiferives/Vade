@@ -306,13 +306,41 @@ struct pos generate_level_structure(int id, int diff)
 	}
 }
 
+struct pos get_rand_pos_of_char(char c)
+{
+	struct pos result;
+	int num =0;
+	for(int i =0; i <levels[cur_level].size.x * levels[cur_level].size.y; i++)
+	{
+		if(levels[cur_level].map[i] == c) num++;
+	}
+	seed_rand();
+	int num2 = get_rand(max,1);
+	num =0;
+	for(int i =0; i <levels[cur_level].size.x * levels[cur_level].size.y; i++)
+	{
+		if(levels[cur_level].map[i] == c) num++;
+		if(num == num2)
+		{
+			num2 =i;
+			break;
+		}
+	}
+	if(num2 ==0 ) return result;
+	result.x = num2 % levels[cur_level].size.x; 
+	result.y = num2 / levels[cur_level].size.x; 
+
+	return result;
+}
+
 void next_level(struct character * player)
 {
 	/* destroy_level(&levels[cur_level]); */
 	cur_level +=1;		
 	generate_level_structure(cur_level,cur_level);
-	player->pos_screen.x = 1;
-	player->pos_screen.y = 1;
+	struct pos p_pos = get_rand_pos_of_char('.');
+	player->pos_screen.x = p_pos.x;
+	player->pos_screen.y = p_pos.y;
 	alloc_maps_for_level(levels[cur_level].size);
 	init_maps();
 	get_render_map();
