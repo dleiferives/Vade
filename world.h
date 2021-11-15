@@ -244,7 +244,11 @@ int normalize_level(struct level * l)
 	}
 
 	puts("-8");
-	if(max2 != 'A') normalize_level(l);
+	if(max2 != 'A')
+	{
+		printf("%i\n",max2);
+		normalize_level(l);
+	}
 
 	return 0;
 }
