@@ -108,7 +108,7 @@ int _main()
 		}
 
 					puts("5");
-		/* render_character(&player); */
+		render_character(&player);
 					puts("4");
 		get_render_map();
 					puts("3");
