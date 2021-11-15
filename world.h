@@ -246,7 +246,8 @@ struct pos generate_level_structure(int id, int diff)
 	for(int i=0; i < diff_width * diff_height; i++)
 		levels[id].map[i] = '.';
 	seed_rand();
-	for(int i=0;i<diff_rooms; i++)
+
+	for(int i=0;i<24; i++)
 	{
 		gen_rand_room(&levels[id]);	
 	}

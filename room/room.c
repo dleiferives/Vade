@@ -5,10 +5,12 @@
 #define DEBUG 0
 
 char * level;
-int level_x = 200;
-int level_y = 200;
-int rooms = 120;
+int * level_i;
+int level_x = 20;
+int level_y = 20;
+int rooms = 8;
 char room_char = 'A';
+int room_val = 1;
 
 void print_level()
 {
@@ -40,6 +42,14 @@ char get_char(int x, int y)
 	if(y<0)				return 0; 
 	return level[get_p(x,y)];
 }
+int get_var(int x, int y)
+{
+	if(x>=level_x) return 0;
+	if(y>=level_y) return 0; 
+	if(x<0)				return 0; 
+	if(y<0)				return 0; 
+	return level[get_p(x,y)];
+}
 
 int char_dist(int pos, int pos2)
 {
@@ -52,23 +62,22 @@ int char_dist(int pos, int pos2)
 	return dist;
 }
 
-int flood_char(int x, int y, char c)
+int flood_vars(int x, int y, int v)
 {
 	// is this character illegal?
-	if(get_char(x,y) == c )
+	if(get_var(x,y) == v )
 	{
 		return 1;
 	}
-	if(get_char(x,y) == '.') return 1;
-	if(get_char(x,y) == 0) return 1;
+	if(get_var(x,y) == 0) return 1;
 	// no? change it call on surrounding characters
-	if(get_char(x,y) != c)
+	if(get_var(x,y) != v)
 	{
-		level[get_p(x,y)] = c;
-		flood_char(x+1,y,c);
-		flood_char(x,y+1,c);
-		flood_char(x-1,y,c);
-		flood_char(x,y-1,c);
+		level[get_p(x,y)] = v;
+		flood_vars(x+1,y,v);
+		flood_vars(x,y+1,v);
+		flood_vars(x-1,y,v);
+		flood_vars(x,y-1,v);
 	}
 	return 0;
 }
@@ -78,7 +87,7 @@ int flood_char(int x, int y, char c)
 /* 0 = error */
 /* 1 = success no other rooms hit */
 /* 2 = other room hit, redrawing */
-int generate_room(unsigned int room_x, unsigned int room_y, unsigned int width, unsigned int height, char c)
+int generate_room(unsigned int room_x, unsigned int room_y, unsigned int width, unsigned int height, int v)
 {
 	if((room_x + width) > level_x) return 0;
 	if((room_y + height) > level_y) return 0;
@@ -86,14 +95,14 @@ int generate_room(unsigned int room_x, unsigned int room_y, unsigned int width, 
 	{
 		for(int x =room_x; x < width+room_x; x++)
 		{
-			char cur = level[get_p(x,y)];
-			if(cur != '.')
+			int cur = level_i[get_p(x,y)];
+			if(cur != 0)
 			{
-				if(c != '.')
+				if(v != 0)
 				{
 					if(DEBUG) print_level();
 					/* clears the memory of this room and its overlaping room */
-					generate_room(room_x,room_y,width,height,'.');
+					generate_room(room_x,room_y,width,height,0);
 					if(DEBUG) print_level();
 					/* renders this room with the last room's character */
 					generate_room(room_x,room_y,width,height,cur);
@@ -103,7 +112,7 @@ int generate_room(unsigned int room_x, unsigned int room_y, unsigned int width, 
 				
 			}
 
-			level[get_p(x,y)] = c;
+			level_i[get_p(x,y)] = v;
 		}
 
 	}
@@ -116,30 +125,32 @@ int gen_rand_room()
 	int h = get_rand(level_y/8+2 , 2);
 	int x = get_rand(level_x, 0);
 	int y = get_rand(level_x, 0);
-	int result = generate_room(x,y,w,h,room_char);
-	if(result == 1) room_char++;
+	int result = generate_room(x,y,w,h,room_val);
+	if(result == 1) room_val++;
 	if(result == 0) gen_rand_room();
 	return result;
 }
 
-int generate_paths(char in_c)
+int generate_paths(int in_v)
 {
 	/* cut path to closest thing that is not this value that is greater than 'a' */
-	/* find number of character */
-	int char_iterator =0;
+	/* find number of vars */
+	int var_iterator =0;
 	for(int i =0; i < (level_x * level_y); i++)
 	{
-		if( in_c == level[i]) char_iterator++;
+		if( in_v == level_i[i]) var_iterator++;
 	}
-	char_iterator = get_rand(char_iterator,0);
-	int char_iterator_2 =0;
-	int iterat_char_pos =0;
+	if(var_iterator == 0) return 0;
+	int result = var_iterator;
+	var_iterator = get_rand(var_iterator,0);
+	int var_iterator_2 =0;
+	int iterat_var_pos =0;
 	for(int i =0; i < (level_x * level_y); i++)
 	{
-		if( in_c == level[i]) char_iterator_2++;
-		if(char_iterator_2 == char_iterator)
+		if( in_v == level_i[i]) var_iterator_2++;
+		if(var_iterator_2 == var_iterator)
 		{
-			iterat_char_pos = i;
+			iterat_var_pos = i;
 			break;
 		}
 	}
@@ -148,9 +159,9 @@ int generate_paths(char in_c)
 	int low_dist_pos=0;
 	for(int i =0; i < (level_x * level_y); i++)
 	{
-		if((((level[i] >= 'a') && (level[i] <= 'z')) || ((level[i]>='A') && (level[i] <='Z')) ) && (level[i] != level[iterat_char_pos]))
+		if((level_i[i] != level_i[iterat_var_pos]) && (level_i[i] >= 0))
 		{
-			int temp = char_dist(iterat_char_pos, i);
+			int temp = char_dist(iterat_var_pos, i);
 			if(temp < low_dist)
 			{
 				low_dist = temp;
@@ -158,12 +169,9 @@ int generate_paths(char in_c)
 			}
 		}
 	}
-	
-	if(DEBUG) level[iterat_char_pos] = '%';
-	if(DEBUG) level[low_dist_pos] = 'O';
 
-	int dx = (iterat_char_pos % level_x) - (low_dist_pos % level_x);
-	int dy = (iterat_char_pos / level_x) - (low_dist_pos / level_x);
+	int dx = (iterat_var_pos % level_x) - (low_dist_pos % level_x);
+	int dy = (iterat_var_pos / level_x) - (low_dist_pos / level_x);
   int x_sign = (dx > 0) ? 1 : -1;
   int y_sign = (dy > 0) ? 1 : -1;
 	
@@ -171,33 +179,33 @@ int generate_paths(char in_c)
 	int cursor_y = low_dist_pos / level_x;
 	for(int y =0; y < (dy * y_sign); y++)
 	{
-		level[get_p(cursor_x,cursor_y)] = '+'; 
+		level_i[get_p(cursor_x,cursor_y)] = -1; 
 		cursor_y += y_sign;
 	}
 
 	for(int x =0; x < (dx * x_sign); x++)
 	{
-		level[get_p(cursor_x,cursor_y)] = '+'; 
+		level_i[get_p(cursor_x,cursor_y)] = -1; 
 		cursor_x += x_sign;
 	}
 
 	/* generate random number within that */
-
+	return result;
 }
 
-int normalize_level()
+int normalize_level(int vars)
 {
-	char flood_var = 'a';
+	int flood_var = vars+1;
 	for(int y =0; y < level_y; y++)
 	{
 		for(int x =0; x < level_x; x++)
 		{
-			if(level[get_p(x,y)] != '.' )
+			if(level_i[get_p(x,y)] != 0 )
 			{
-				if(level[get_p(x,y)] < 'a')
+				if(level_i[get_p(x,y)] < vars+1)
 				{
 
-				flood_char(x,y,flood_var);
+				flood_vars(x,y,flood_var);
 				flood_var++;
 
 				}
@@ -205,32 +213,31 @@ int normalize_level()
 		}
 	}
 
-	char max =0;
+	int max =0;
 	for(int i =0; i < (level_x * level_y); i++)
 	{
-		max = (level[i] > max) ? level[i] : max;
+		max = (level_i[i] > max) ? level_i[i] : max;
 	}
 
 	print_level();
 	putchar(10);
-	putchar(max);
-
-	for(int i =max; i >= 'a'; i--)
+	printf("%i",max);
+	for(int i =max; i >= vars+1; i--)
 	{
 		generate_paths(i);
 	}
 
-	char flood_var2 = 'A';
+	char flood_var2 = 10;
 	for(int y =0; y < level_y; y++)
 	{
 		for(int x =0; x < level_x; x++)
 		{
-			if(level[get_p(x,y)] != '.' )
+			if(level_i[get_p(x,y)] != 0 )
 			{
-				if((level[get_p(x,y)] > 'a') || (level[get_p(x,y)] == '+'))
+				if((level_i[get_p(x,y)] > vars+1) || (level_i[get_p(x,y)] == -1))
 				{
 
-				flood_char(x,y,flood_var2);
+				flood_vars(x,y,flood_var2);
 				flood_var2++;
 
 				}
@@ -238,13 +245,13 @@ int normalize_level()
 		}
 	}
 
-	char max2 =0;
+	int max2 =0;
 	for(int i =0; i < (level_x * level_y); i++)
 	{
-		max2 = (level[i] > max2) ? level[i] : max2;
+		max2 = (level_i[i] > max2) ? level_i[i] : max2;
 	}
 
-	if(max2 != 'A') normalize_level();
+	if(max2 != 1) normalize_level(max2);
 
 	return 0;
 }
@@ -256,14 +263,12 @@ int main()
 	level = malloc(sizeof(char) * level_x*level_y);
 	for(int i=0; i < (level_x * level_y); i++)
 		level[i] = '.';
+	level_i = malloc(sizeof(int) * level_x*level_y);
+	for(int i=0; i < (level_x * level_y); i++)
+		level_i[i] = 0;
 
 	print_level();
 
-/* int var =	generate_room(5,2,15,8,'X'); */
-/* printf("%i\n",var); */
-/* int var2 =	generate_room(1,1,8,4,'A'); */
-/* printf("%i\n",var); */
-/* flood_char(1,1,'c'); */
 
 	for(int i= 0; i< rooms; i++)
 	{
@@ -276,7 +281,12 @@ int main()
 	/* flood rooms */
 
 	// flood the corners 
-	normalize_level();
+	normalize_level(rooms);
+	for(int i=0; i<level_y*level_y; i++)
+	{
+		if(level_i[i] == 0) level[i] = '.';
+		if(level_i[i] == 10) level[i] = 'A';
+	}
 	putchar(10);
 	print_level();
 	for(int y =0; y < level_y; y++)
