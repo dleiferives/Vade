@@ -233,6 +233,7 @@ void print_aud(struct pos p)
 				putchar('|');
 		putchar(10);
 	}
+	for(int i=0; i<AUD_WIDTH+2; i++) putchar('-');
 }
 
 void print_map(struct pos p)
