@@ -56,6 +56,7 @@
 	int get_mode()
 	{
 		int result = input_mode;
+		if(p == '4') input_mode = 4;
 		if(p == '2') input_mode = 2;
 		if(p == '3') input_mode = 3;
 		if(p == '1') input_mode = 1;
