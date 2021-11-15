@@ -82,13 +82,7 @@ void init_maps(void)
 		for(int x =0; x <levels[cur_level].size.x; x++)
 		{
 			int m_pos = (y * levels[cur_level].size.x) + x;
-			char icon ='.';
-			if(x==0) icon = 'X';
-			if(x==(levels[cur_level].size.x-1)) icon = 'X';
-			if(y==0) icon = 'X';
-			if(y==(levels[cur_level].size.y-1)) icon = 'X';
-			levels[cur_level].map[m_pos] = icon;
-			game_map[m_pos] = icon;
+			game_map[m_pos] = levels[cur_level].map[m_pos];
 			entities_map[m_pos] = 0;
 			render_map[m_pos] = (entities_map[m_pos] == 0) ? game_map[m_pos] : entities_map[m_pos];
 		}
