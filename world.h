@@ -300,5 +300,5 @@ void next_level(struct character * player)
 	cur_level +=1;		
 	player->pos_screen = generate_level_structure(cur_level,cur_level);
 	/* init_maps(); */
-	get_render_map();
+	/* get_render_map(); */
 }
