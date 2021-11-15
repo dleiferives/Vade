@@ -170,11 +170,20 @@ void * get_malloc(unsigned int size)
 		delayMicroseconds(10);
 		while(digitalRead(interruptPinM1) == LOW){}
 	}
+	void seed_rand()
+	{
+
+	}
 	int get_rand(int max, int min)
 	{
 		return random(min,max);	
 	}
 #elif defined(WIN32)
+	void seed_rand()
+{
+	time_t rand_time;
+	srand((unsigned) time(&rand_time));
+}
  int get_rand(int max, int min)
   {
     return (rand() % (max-min)) + min;
