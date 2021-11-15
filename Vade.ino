@@ -24,7 +24,7 @@ int _main()
 	player.items[1] =0;
 	player.tile = '@';
 	add_item(&player, 2);
-	player->pos_screen = get_rand_pos_of_char('.');
+	player.pos_screen = get_rand_pos_of_char('.');
 
 	// gameplay loop
 	while(1)
