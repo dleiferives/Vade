@@ -221,10 +221,10 @@ void print_aud(struct pos p)
 	printf("OWidth %i OHeight %i\n",offsets.x,offsets.y);
 	for(int i=0; i<AUD_WIDTH+2; i++) putchar('-');
 	putchar(10);
+		for(int oy =0; oy < offsets.y/1; oy++) putchar(10);
 	for(int y=0; y<height; y++)
 	{
 		putchar('|');
-		/* for(int oy =0; oy < offsets.y; oy++) putchar(10); */
 			for(int ox =0; ox < offsets.x/2; ox++) putchar(' ');
 		for(int x=0; x<width; x++)
 		{
@@ -234,6 +234,7 @@ void print_aud(struct pos p)
 				putchar('|');
 		putchar(10);
 	}
+		for(int oy =0; oy < offsets.y/1; oy++) putchar(10);
 	for(int i=0; i<AUD_WIDTH+2; i++) putchar('-');
 }
 
