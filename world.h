@@ -308,4 +308,5 @@ void next_level(struct character * player)
 	puts("e");
 	get_render_map();
 	puts("b");
+		print_map(levels[cur_level].lcd);
 }
