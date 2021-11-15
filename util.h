@@ -173,6 +173,7 @@ void * get_malloc(unsigned int size)
 	void seed_rand()
 	{
 
+		randomSeed(analogRead(0));
 	}
 	int get_rand(int max, int min)
 	{
