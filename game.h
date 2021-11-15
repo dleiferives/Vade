@@ -168,6 +168,7 @@ int render_ascii(char val, struct pos p)
 // SPEED -- could be made faster by passing the pos by value
 void render_character(struct character * player)
 {
+	printf("%i %i",player->pos_screen.x, player->pos_screen.y);
 	entities_map[(player -> pos_screen.y * levels[cur_level].size.x) + player -> pos_screen.x] = player -> tile;
 }
 
