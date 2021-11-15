@@ -17,7 +17,7 @@ int _main()
 	setup_arduino(); // alloc.h
 	init_maps();     // game.h
 	get_render_map();// game.h 
-	print_map(levels[cur_level].lcd); //game.h
+	/* print_map(levels[cur_level].lcd); //game.h */
 
 	//setting up the character
 	struct character player = init_character;
@@ -106,7 +106,7 @@ int _main()
 
 		render_character(&player);
 		get_render_map();
-		print_map(levels[cur_level].lcd);
+		print_map(player.pos_screen);
 
 	}
 	
