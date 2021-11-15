@@ -243,15 +243,15 @@ void print_aud(struct pos p)
 void print_map(struct pos p)
 {
 
-	for(int y =0; y <levels[cur_level].size.y; y++)
-	{
-		for(int x =0; x <levels[cur_level].size.x; x++)
-		{
-			putchar(render_map[(y*levels[cur_level].size.x) +x]);
-			putchar(' ');
-		}
-		putchar(10);
-	}
+	/* for(int y =0; y <levels[cur_level].size.y; y++) */
+	/* { */
+	/* 	for(int x =0; x <levels[cur_level].size.x; x++) */
+	/* 	{ */
+	/* 		putchar(render_map[(y*levels[cur_level].size.x) +x]); */
+	/* 		putchar(' '); */
+	/* 	} */
+	/* 	putchar(10); */
+	/* } */
 	print_aud(p);
 	printf("Mode = %i\n",input_mode);
 
