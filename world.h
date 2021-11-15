@@ -350,5 +350,7 @@ void next_level(struct character * player)
 	init_maps();
 	get_render_map();
 		levels[cur_level].lcd = player->pos_screen;
+		levels[cur_level].lcd.x += AUD_WIDTH /2;
+		levels[cur_level].lcd.y += AUD_HEIGHT /2;
 		print_map(levels[cur_level].lcd);
 }
