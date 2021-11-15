@@ -221,7 +221,7 @@ int normalize_level(struct level * l)
 		{
 			if(l[0].map[get_level_p(l,x,y)] != '.' )
 			{
-				if((l[0].map[get_level_p(l,x,y)] > 'a') || (l[0].map[get_level_p(l,x,y)] == '+'))
+				if((l[0].map[get_level_p(l,x,y)] >='a') || (l[0].map[get_level_p(l,x,y)] == '+'))
 				{
 
 				flood_char(l,x,y,flood_var2);
