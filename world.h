@@ -292,9 +292,6 @@ struct pos generate_level_structure(int id, int diff)
 		}
 	}
 	floor_tiles = get_rand(floor_tiles,0);
-	int character_pos = get_rand(floor_tiles,0);
-	result.x = character_pos % levels[id].size.x;
-	result.y = character_pos / levels[id].size.x;
 	int floor_tiles2 =0;
 	for(int i=0; i<(diff_width*diff_height); i++)
 	{
