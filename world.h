@@ -296,10 +296,15 @@ struct pos generate_level_structure(int id, int diff)
 
 void next_level(struct character * player)
 {
+	puts("a");
 	/* destroy_level(&levels[cur_level]); */
 	cur_level +=1;		
+	puts("b");
 	player->pos_screen = generate_level_structure(cur_level,1);
+	puts("c");
 	alloc_maps_for_level(levels[cur_level].size);
+	puts("d");
 	init_maps();
+	puts("e");
 	get_render_map();
 }
