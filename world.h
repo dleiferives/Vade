@@ -222,7 +222,7 @@ int normalize_level(struct level * l)
 	}
 }
 
-struct level * l generate_level_structure(int id, int diff)
+struct level * generate_level_structure(int id, int diff)
 {
 	//dificulty 0 - 1000
 	//width 30 - 300
