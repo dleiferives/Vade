@@ -246,14 +246,14 @@ int normalize_level(struct level * l)
 	puts("-8");
 	if((max2 != 'A') && (max2 != 'a'))
 	{
-		for(int y =0; y< levels[cur_level].size.y; y++)
-		{
-			for(int x =0; x< levels[cur_level].size.x; x++)
-			{
-				putchar(levels[cur_level].map[get_level_p(&levels[cur_level],x,y)]);
-			}
-			putchar(10);
-		}
+		/* for(int y =0; y< levels[cur_level].size.y; y++) */
+		/* { */
+		/* 	for(int x =0; x< levels[cur_level].size.x; x++) */
+		/* 	{ */
+		/* 		putchar(levels[cur_level].map[get_level_p(&levels[cur_level],x,y)]); */
+		/* 	} */
+		/* 	putchar(10); */
+		/* } */
 		printf("%i\n",max2);
 		normalize_level(l);
 	}
