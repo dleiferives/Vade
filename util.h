@@ -121,6 +121,9 @@ int num_levels = 20;
 int cur_level  = 0;
 struct level * levels;
 
+unsigned long g_time =0;// global time
+unsigned long old_g_time=0;  // the previous global time
+
 #if defined(__AVT_ATmega1028__) || defined(__AVR_ATmega2560__)
 	/* input.h */
 	struct uint12By2 analogIn;
