@@ -244,7 +244,7 @@ int normalize_level(struct level * l)
 	}
 
 	puts("-8");
-	if(max2 != 'A')
+	if((max2 != 'A') && (max2 != 'a'))
 	{
 		for(int y =0; y< levels[cur_level].size.y; y++)
 		{
