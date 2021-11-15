@@ -122,6 +122,7 @@ int generate_paths(struct level * l, char in_c)
 	}
 	puts("2");
 	char_iterator = get_rand(char_iterator,0);
+	putchar(char_iterator);
 	puts("3");
 	int char_iterator_2 =0;
 	puts("3");
