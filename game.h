@@ -173,6 +173,7 @@ void render_character(struct character * player)
 
 void alloc_maps_for_level(struct pos size)
 {
+	printf("%i %i %i %i\n"levels[cur_level].size.x, size.x, levels[cur_level].size.y,size.y);
 	free(game_map);
 	int mem_size = sizeof(char) * size.x * size.y;
 	game_map     = get_malloc(mem_size);
