@@ -310,7 +310,9 @@ void next_level(struct character * player)
 {
 	/* destroy_level(&levels[cur_level]); */
 	cur_level +=1;		
-	player->pos_screen = generate_level_structure(cur_level,cur_level);
+	generate_level_structure(cur_level,cur_level);
+	player->pos_screen.x = 1;
+	player->pos_screen.y = 1;
 	alloc_maps_for_level(levels[cur_level].size);
 	init_maps();
 	get_render_map();
