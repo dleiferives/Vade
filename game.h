@@ -215,6 +215,7 @@ void print_aud(struct pos p)
 	int height = (AUD_HEIGHT > l_y) ? l_y : AUD_HEIGHT; // height of level on screen
 	printf("Width %i Height %i\n",width,height);
 	for(int i=0; i<AUD_WIDTH+2; i++) putchar('-');
+	putchar(10);
 }
 
 void print_map(struct pos p)
