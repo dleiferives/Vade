@@ -38,6 +38,11 @@ int add_item(struct character * player, int item_id)
 	return 1;
 }
 
+char rel_char(struct pos p1, struct pos p2,)
+{
+	return levels[cur_level].map[get_level_p(&levels[cur_level],p1.x+p1.x, p.y+p2.y)];
+}
+
 void move_character(struct character * player,int x, int y)
 {
 	int t_step =1;
@@ -45,17 +50,14 @@ void move_character(struct character * player,int x, int y)
 	if((player->pos_screen.x - 1) < 0) t_step=0;
 	if((player->pos_screen.y - 1) < 0) t_step=0;
 	if((player->pos_screen.y + 1) >= (levels[cur_level].size.y )) t_step=0;
-	puts("FUCKING SULS");
 	if(t_step !=0)
 	{
-	puts("FxxxxUCKING SULS");
-		if((levels[cur_level].map[get_level_p(&levels[cur_level],x+player->pos_screen.x, y+player->pos_screen.y)]) == '#')
+		if(rel_char(player->pos_screen,{x,y}) == '#')
 		{ 
 			t_step = 0;
 		}
 		if(t_step == 1)
 		{
-			puts("dkjdlfsj:FUCKING SULS");
 			player -> pos_screen_old = player[0].pos_screen;
 			player[0].pos_screen.x += x;
 			player[0].pos_screen.y += y;
