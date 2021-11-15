@@ -185,9 +185,7 @@ int generate_paths(struct level * l, char in_c)
 
 int normalize_level(struct level * l)
 {
-	puts("-1");
 	char flood_var = 'a';
-	puts("-2");
 	for(int y =0; y < l[0].size.y; y++)
 	{
 		for(int x =0; x < l[0].size.x; x++)
@@ -205,20 +203,17 @@ int normalize_level(struct level * l)
 		}
 	}
 
-	puts("-2");
 	char max =0;
 	for(int i =0; i < (l[0].size.x * l[0].size.y); i++)
 	{
 		max = (l[0].map[i] > max) ? l[0].map[i] : max;
 	}
 
-	puts("-3");
 	for(int i =max; i >= 'a'; i--)
 	{
 		generate_paths(l,i);
 	}
 
-	puts("-4");
 	char flood_var2 = 'A';
 	for(int y =0; y < l[0].size.y; y++)
 	{
@@ -237,13 +232,11 @@ int normalize_level(struct level * l)
 		}
 	}
 	char max2 =0;
-	puts("-5");
 	for(int i =0; i < (l[0].size.x * l[0].size.y); i++)
 	{
 		max2 = (l[0].map[i] > max2) ? l[0].map[i] : max2;
 	}
 
-	puts("-8");
 	if((max2 != 'A') && (max2 != 'a'))
 	{
 		/* for(int y =0; y< levels[cur_level].size.y; y++) */
@@ -268,26 +261,21 @@ struct pos generate_level_structure(int id, int diff)
 	//dificulty 0 - 1000
 	//width 30 - 300
 	//height 20 - 200
-	puts("1");
 	int diff_width = pow(2.7, ((float)diff/(float)2) ) + 19;
 	int diff_height = pow(2.7, ((float)diff/(float)2) )+ 19;
 	int diff_mobs = ((double) diff_width * (double) diff_height) * ((double)1.0- ((double) (((double)10.0)/((double) diff + (double) 10.0))));
 	int diff_rooms = pow(2.5, ((float)diff/(float)2) ) + 8;
 	levels[id] = gen_level(id,diff, diff_width, diff_height, diff_mobs);
-	puts("2");
 	for(int i=0; i < diff_width * diff_height; i++)
 		levels[id].map[i] = '.';
-	puts("3");
 	seed_rand();
 
 	for(int i=0;i<diff_rooms; i++)
 	{
 		gen_rand_room(&levels[id]);	
 	}
-	puts("4");
 	normalize_level(&levels[id]);
 	struct level * l = &levels[id];
-	puts("5");
 	for(int y =0; y < diff_height; y++)
 	{
 		for(int x =0; x < diff_width; x++)
@@ -358,16 +346,11 @@ void next_level(struct character * player)
 {
 	/* destroy_level(&levels[cur_level]); */
 	cur_level +=1;		
-	puts("1");
 	generate_level_structure(cur_level,cur_level);
-	puts("2");
 	player->pos_screen.x = 1;
 	player->pos_screen.y = 1;
-	puts("3");
 	alloc_maps_for_level(levels[cur_level].size);
-	puts("4");
 	init_maps();
-	puts("5");
 	get_render_map();
 		print_map(levels[cur_level].lcd);
 }

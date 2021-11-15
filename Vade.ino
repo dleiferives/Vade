@@ -93,27 +93,19 @@ int _main()
 				{
 					next_level(&player);
 
-					puts("1");
 				}
-					puts("8");
 				break;
 					reset_entity_map();
-					puts("7");
 		}
 		// runs if the time has advanced. time does not 
-					puts("6");
 		if(g_time > old_g_time)
 		{
 			/* run entities code */
 		}
 
-					puts("5");
 		render_character(&player);
-					puts("4");
 		get_render_map();
-					puts("3");
 		print_map(levels[cur_level].lcd);
-					puts("2");
 
 	}
 	
