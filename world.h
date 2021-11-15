@@ -121,7 +121,7 @@ int generate_paths(struct level * l, char in_c)
 		if( in_c == l[0].map[i]) char_iterator++;
 	}
 	if(char_iterator == 0) return 0;
-	if(char_iterator_old == char_iterator) return 0;
+	if(char_iterator_old == char_iterator) generate_paths(l,in_c);
 	char_iterator_old = char_iterator;
 	printf("a%i",char_iterator);
 	char_iterator = get_rand(char_iterator,0);
