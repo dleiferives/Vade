@@ -350,5 +350,5 @@ void next_level(struct character * player)
 	init_maps();
 	get_render_map();
 		levels[cur_level].lcd = player->pos_screen;
-		print_map(&levels[cur_level].lcd);
+		print_map(levels[cur_level].lcd);
 }
