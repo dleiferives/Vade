@@ -83,7 +83,7 @@ int _main()
 			case 3:
 			//cursors n stuff
 				break;
-			case 4
+			case 4:
 				if(temp_dir == 3)
 				{
 					// take action at player	

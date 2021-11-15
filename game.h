@@ -74,6 +74,21 @@ void move_mob(struct mob * m, int x, int y)
 	m -> pos_screen.y +=y;
 }
 
+int character_action(struct character * player, struct pos p)
+{
+	char loc = rel_char(player->pos_screen, p);
+	int s_time =1;
+	switch(loc)
+	{
+		case '+':
+			if((p.x == 0) && (p.y == 0))
+			{
+				s_time =0;
+			}
+			break;
+	}
+}
+
 /*
  *
  *
