@@ -114,14 +114,17 @@ int generate_paths(struct level * l, char in_c)
 {
 	/* cut path to closest thing that is not this value that is greater than 'a' */
 	/* find number of character */
+	puts("1");
 	int char_iterator =0;
 	for(int i =0; i < (l[0].size.x * l[0].size.y); i++)
 	{
 		if( in_c == l[0].map[i]) char_iterator++;
 	}
+	puts("2");
 	char_iterator = get_rand(char_iterator,0);
 	int char_iterator_2 =0;
 	int iterat_char_pos =0;
+	puts("4");
 	for(int i =0; i < (l[0].size.x* l[0].size.y); i++)
 	{
 		if( in_c == l[0].map[i]) char_iterator_2++;
