@@ -63,19 +63,15 @@ int _main()
 				switch(temp_dir)
 				{
 					case 0:
-						if((player.pos_screen.x + 1) >= (levels[cur_level].size.x )) break;
 						move_character(&player,1,0);
 						break;
 					case 1:
-						if((player.pos_screen.x - 1) < 0) break;
 						move_character(&player,-1,0);
 						break;
 					case 2:
-						if((player.pos_screen.y - 1) < 0) break;
 						move_character(&player,0,-1);
 						break;
 					case 3:
-						if((player.pos_screen.y + 1) >= (levels[cur_level].size.y )) break;
 						move_character(&player,0,1);
 						break;
 					case 4:
