@@ -34,7 +34,7 @@ void setup_game()
 	/* world.h */
 	levels = (struct level*)malloc(sizeof(struct level) * num_levels);
 	/* levels[cur_level] = gen_level(cur_level, 1, GEN_WIDTH, GEN_HEIGHT, GEN_MOBS); */ 
-	 generate_level_structure(cur_level, 7);
+	 generate_level_structure(cur_level, 8);
 	/* items.h */
 	items = (struct item*)malloc(sizeof(struct item) * num_global_items);
 	for(int i =0; i<num_global_items; i++)
