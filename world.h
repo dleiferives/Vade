@@ -67,16 +67,6 @@ int flood_char(struct level * l, int x, int y, char c)
 	return 0;
 }
 
-void gen_rooms_in_level(struct level *l)
-{
-	// rand number of rooms
-	// fill out area of rectangles with some character possibly +
-	// find edgeof those areas, if the room has no empty room.... delete it
-	
-	//make paths between the rooms... so they are all traversable
-	
-}
-
 /* return values */
 /* 0 = error */
 /* 1 = success no other rooms hit */
@@ -232,7 +222,21 @@ int normalize_level(struct level * l)
 	}
 }
 
-int generate_level_structure(struct level * l, int diff)
+struct level * l generate_level_structure(int id, int diff)
 {
-
+	//dificulty 0 - 1000
+	//width 30 - 300
+	//height 20 - 200
+	int diff_width = pow(2.7, ((float)diff/(float)2) ) + 19;
+	int diff_height = pow(2.7, ((float)diff/(float)2) )+ 19;
+	int diff_mobs = ((double) diff_width * (double) diff_height) * ((double)1.0- ((double) (((double)10.0)/((double) diff + (double) 10.0))));
+	int diff_rooms = pow(2.6, ((float)diff/(float)2) ) + 8;
+	struct level * result = gen_level(id,diff, diff_width, diff_height, diff_mobs);
+	for(int i=0;i<diff_rooms; i++)
+	{
+		gen_rand_room(levels[id]);	
+	}
+	normalize_level(levels[id]);
+	get_render_map();
+	print_map(levels[id].lcd);
 }

@@ -5,8 +5,9 @@
 #define DEBUG 0
 
 char * level;
-int level_x = 64;
-int level_y = 32;
+int level_x = 200;
+int level_y = 200;
+int rooms = 120;
 char room_char = 'A';
 
 void print_level()
@@ -264,7 +265,7 @@ int main()
 /* printf("%i\n",var); */
 /* flood_char(1,1,'c'); */
 
-	for(int i= 0; i< 31; i++)
+	for(int i= 0; i< rooms; i++)
 	{
 		gen_rand_room();
 		putchar(10);
