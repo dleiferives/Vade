@@ -280,7 +280,7 @@ struct pos generate_level_structure(int id, int diff)
 			}
 			putchar(10);
 		}
-		normalize_level(&levels[id]);
+		if(j%5 ==0) normalize_level(&levels[id]);
 	}
 	normalize_level(&levels[id]);
 	struct level * l = &levels[id];
