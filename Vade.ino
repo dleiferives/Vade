@@ -30,6 +30,7 @@ int _main()
 	// gameplay loop
 	while(1)
 	{
+		old_g_time = g_time;
 		handle_input(); //input.h
 		reset_entity_map(); // game.h -- render
 		int temp_mode = get_mode(); //input.h
@@ -89,7 +90,7 @@ int _main()
 		// runs if the time has advanced. time does not 
 		if(g_time > old_g_time)
 		{
-			run entities code
+			/* run entities code */
 		}
 
 		render_character(&player);
