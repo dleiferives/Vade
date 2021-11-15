@@ -115,21 +115,16 @@ int generate_paths(struct level * l, char in_c)
 	seed_rand();
 	/* cut path to closest thing that is not this value that is greater than 'a' */
 	/* find number of character */
-	puts("1");
 	int char_iterator =0;
 	for(int i =0; i < (l[0].size.x * l[0].size.y); i++)
 	{
 		if( in_c == l[0].map[i]) char_iterator++;
 	}
 	if(char_iterator == 0) return 0;
-	puts("2");
 	printf("%i",char_iterator);
 	char_iterator = get_rand(char_iterator,0);
-	puts("3");
 	int char_iterator_2 =0;
-	puts("3");
 	int iterat_char_pos =0;
-	puts("4");
 	for(int i =0; i < (l[0].size.x* l[0].size.y); i++)
 	{
 		if( in_c == l[0].map[i]) char_iterator_2++;
@@ -202,13 +197,11 @@ int normalize_level(struct level * l)
 		max = (l[0].map[i] > max) ? l[0].map[i] : max;
 	}
 
-	puts("ALPHA");
 	for(int i =max; i >= 'a'; i--)
 	{
 		generate_paths(l,i);
 	}
 
-	puts("BETA");
 	char flood_var2 = 'A';
 	for(int y =0; y < l[0].size.y; y++)
 	{
@@ -226,7 +219,6 @@ int normalize_level(struct level * l)
 			}
 		}
 	}
-	puts("THETA");
 	char max2 =0;
 	for(int i =0; i < (l[0].size.x * l[0].size.y); i++)
 	{
@@ -249,22 +241,15 @@ struct pos generate_level_structure(int id, int diff)
 	int diff_height = pow(2.7, ((float)diff/(float)2) )+ 19;
 	int diff_mobs = ((double) diff_width * (double) diff_height) * ((double)1.0- ((double) (((double)10.0)/((double) diff + (double) 10.0))));
 	int diff_rooms = pow(2.5, ((float)diff/(float)2) ) + 8;
-	puts("z");
 	levels[id] = gen_level(id,diff, diff_width, diff_height, diff_mobs);
-	puts("y");
 	for(int i=0; i < diff_width * diff_height; i++)
 		levels[id].map[i] = '.';
 	seed_rand();
-	puts("x");
 	for(int i=0;i<diff_rooms; i++)
 	{
 		gen_rand_room(&levels[id]);	
-	}
-		puts("w");
 	normalize_level(&levels[id]);
-		puts("v");
 	struct level * l = &levels[id];
-		puts("s");
 	for(int y =0; y < diff_height; y++)
 	{
 		for(int x =0; x < diff_width; x++)
@@ -278,7 +263,6 @@ struct pos generate_level_structure(int id, int diff)
 			}
 		}
 	}
-		puts("t");
 	int floor_tiles=0;
 	for(int i=0; i<(diff_width*diff_height); i++)
 	{
@@ -289,7 +273,6 @@ struct pos generate_level_structure(int id, int diff)
 			floor_tiles++;
 		}
 	}
-		puts("u");
 	floor_tiles = get_rand(floor_tiles,0);
 	int character_pos = get_rand(floor_tiles,0);
 	result.x = character_pos % levels[id].size.x;
@@ -311,17 +294,11 @@ struct pos generate_level_structure(int id, int diff)
 
 void next_level(struct character * player)
 {
-	puts("a");
 	/* destroy_level(&levels[cur_level]); */
 	cur_level +=1;		
-	puts("b");
 	player->pos_screen = generate_level_structure(cur_level,cur_level);
-	puts("c");
 	alloc_maps_for_level(levels[cur_level].size);
-	puts("d");
 	init_maps();
-	puts("e");
 	get_render_map();
-	puts("b");
 		print_map(levels[cur_level].lcd);
 }
