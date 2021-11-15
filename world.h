@@ -99,6 +99,7 @@ int generate_room(struct level * l, unsigned int room_x, unsigned int room_y, un
 
 int gen_rand_room(struct level * l)
 {
+		for(int i=0; i < 100; i++){putchar(get_rand('z','a'));}
 	int w = get_rand(l[0].size.x/10 +2 , 2);
 	int h = get_rand(l[0].size.y/8+2 , 2);
 	int x = get_rand(l[0].size.x, 0);
