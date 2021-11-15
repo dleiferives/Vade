@@ -275,7 +275,6 @@ struct pos generate_level_structure(int id, int diff)
 		{
 			gen_rand_room(&levels[id]);	
 		}
-			gen_rand_room(&levels[id]);	
 		normalize_level(&levels[id]);
 	}
 	normalize_level(&levels[id]);
