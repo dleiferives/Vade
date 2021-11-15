@@ -257,7 +257,7 @@ struct level * generate_level_structure(int id, int diff)
 			{
 				if((get_char(l,x+1,y) > '.') || (get_char(l,x-1,y) > '.') || (get_char(l,x,y+1) > '.') || (get_char(l,x,y-1) > '.'))
 				{
-					levels[id].map[get_p(l,x,y)] = '#';
+					levels[id].map[get_level_p(l,x,y)] = '#';
 				}
 			}
 		}
