@@ -99,6 +99,7 @@ int generate_room(struct level * l, unsigned int room_x, unsigned int room_y, un
 
 int gen_rand_room(struct level * l)
 {
+	seed_random();
 	int w = get_rand(l[0].size.x/10 +2 , 2);
 	int h = get_rand(l[0].size.y/8+2 , 2);
 	int x = get_rand(l[0].size.x, 0);
@@ -269,7 +270,7 @@ struct pos generate_level_structure(int id, int diff)
 	for(int i=0; i < diff_width * diff_height; i++)
 		levels[id].map[i] = '.';
 	seed_rand();
-	for(int j=0; j< diff_rooms*2;j++)
+	for(int j=0; j< diff_rooms;j++)
 	{
 			gen_rand_room(&levels[id]);	
 		for(int y =0; y< levels[cur_level].size.y; y++)
