@@ -270,3 +270,11 @@ struct level * generate_level_structure(int id, int diff)
 		if(levels[id].map[i] == 'A') levels[id].map[i] = '.';
 	}
 }
+
+void next_level()
+{
+	destroy_level(&levels[cur_level]);
+	cur_level++;		
+	generate_level_structure(cur_level,cur_level);
+
+}
