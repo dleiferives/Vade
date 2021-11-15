@@ -274,6 +274,29 @@ struct item item_by_id(int id)
 	return items[id];
 }
 
+
+/*
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ * --------- COMBAT --------
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ */
 	
 
 

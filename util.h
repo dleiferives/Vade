@@ -124,6 +124,9 @@ struct level * levels;
 unsigned long g_time =0;// global time
 unsigned long old_g_time=0;  // the previous global time
 
+struct pos cursor_pos;
+char cursor_icon = '$';
+
 #if defined(__AVT_ATmega1028__) || defined(__AVR_ATmega2560__)
 	/* input.h */
 	struct uint12By2 analogIn;

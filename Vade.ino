@@ -3,6 +3,7 @@
 // entities
 //render 
 // itmes
+//combat
 #include "world.h"
 #include "alloc.h"
 #include "input.h"
@@ -80,6 +81,7 @@ int _main()
 				break;
 
 			case 3:
+				
 			//cursors n stuff
 				break;
 			case 4:
