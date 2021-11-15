@@ -41,15 +41,15 @@ int add_item(struct character * player, int item_id)
 void move_character(struct character * player,int x, int y)
 {
 	int t_step =1;
-	if((player.pos_screen.x + 1) >= (levels[cur_level].size.x )) t_step=0;
-	if((player.pos_screen.x - 1) < 0) t_step=0;
-	if((player.pos_screen.y - 1) < 0) t_step=0;
-	if((player.pos_screen.y + 1) >= (levels[cur_level].size.y )) t_step=0;
+	if((player->pos_screen.x + 1) >= (levels[cur_level].size.x )) t_step=0;
+	if((player->pos_screen.x - 1) < 0) t_step=0;
+	if((player->pos_screen.y - 1) < 0) t_step=0;
+	if((player->pos_screen.y + 1) >= (levels[cur_level].size.y )) t_step=0;
 	if(t_step !=0)
 	{
 		if((levels[cur_level].
-					map[get_level_p(x+player.pos_screen.x,
-													y+player.pos_screen.y)]) 
+					map[get_level_p(x+player->pos_screen.x,
+													y+player->pos_screen.y)]) 
 				   == (' ' || '#'))
 		{ 
 			t_step = 0;
