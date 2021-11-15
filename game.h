@@ -222,6 +222,7 @@ void print_aud(struct pos p)
 	putchar(10);
 	for(int y=0; y<height; y++)
 	{
+		putchar('|');
 		/* for(int oy =0; oy < offsets.y; oy++) putchar(10); */
 			for(int ox =0; ox < offsets.x/2; ox++) putchar(' ');
 		for(int x=0; x<width; x++)
@@ -230,6 +231,8 @@ void print_aud(struct pos p)
 		}
 		putchar(10);
 	}
+			for(int ox =0; ox < offsets.x/2; ox++) putchar(' ');
+		putchar('|');
 }
 
 void print_map(struct pos p)
