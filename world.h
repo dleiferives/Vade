@@ -248,6 +248,27 @@ struct level * generate_level_structure(int id, int diff)
 		gen_rand_room(&levels[id]);	
 	}
 	normalize_level(&levels[id]);
+	struct level * l = &levels[id];
+	for(int y =0; y < diff_height; y++)
+	{
+		for(int x =0; x < diff_width; x++)
+		{
+			if((get_char(l,x,y) == '.'))
+			{
+				if((get_char(l,x+1,y) > '.') || (get_char(l,x-1,y) > '.') || (get_char(l,x,y+1) > '.') || (get_char(l,x,y-1) > '.'))
+				{
+					levels[id].map[get_p(l,x,y)] = '#';
+				}
+			}
+		}
+	}
+
+	for(int i=0; i<(diff_width*diff_height); i++)
+	{
+		if(levels[id].map[i] == '.') levels[id].map[i] = ' ';
+		if(levels[id].map[i] == 'A') levels[id].map[i] = '.';
+	}
+
 	/* get_render_map(); */
 	/* print_map(levels[id].lcd); */
 }
