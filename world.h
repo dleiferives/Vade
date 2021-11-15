@@ -307,4 +307,5 @@ void next_level(struct character * player)
 	init_maps();
 	puts("e");
 	get_render_map();
+	puts("b");
 }
