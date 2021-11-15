@@ -249,19 +249,23 @@ struct pos generate_level_structure(int id, int diff)
 	//dificulty 0 - 1000
 	//width 30 - 300
 	//height 20 - 200
+	puts("1");
 	int diff_width = pow(2.7, ((float)diff/(float)2) ) + 19;
 	int diff_height = pow(2.7, ((float)diff/(float)2) )+ 19;
 	int diff_mobs = ((double) diff_width * (double) diff_height) * ((double)1.0- ((double) (((double)10.0)/((double) diff + (double) 10.0))));
 	int diff_rooms = pow(2.5, ((float)diff/(float)2) ) + 8;
 	levels[id] = gen_level(id,diff, diff_width, diff_height, diff_mobs);
+	puts("2");
 	for(int i=0; i < diff_width * diff_height; i++)
 		levels[id].map[i] = '.';
+	puts("3");
 	seed_rand();
 
 	for(int i=0;i<diff_rooms; i++)
 	{
 		gen_rand_room(&levels[id]);	
 	}
+	puts("4");
 	normalize_level(&levels[id]);
 	struct level * l = &levels[id];
 	for(int y =0; y < diff_height; y++)
