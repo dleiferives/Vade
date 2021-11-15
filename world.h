@@ -232,11 +232,11 @@ struct level * generate_level_structure(int id, int diff)
 	int diff_mobs = ((double) diff_width * (double) diff_height) * ((double)1.0- ((double) (((double)10.0)/((double) diff + (double) 10.0))));
 	int diff_rooms = pow(2.6, ((float)diff/(float)2) ) + 8;
 	levels[id] = gen_level(id,diff, diff_width, diff_height, diff_mobs);
-	/* for(int i=0;i<diff_rooms; i++) */
-	/* { */
-		/* gen_rand_room(&levels[id]); */	
-	/* } */
-	/* normalize_level(&levels[id]); */
-	/* get_render_map(); */
+	for(int i=0;i<diff_rooms; i++)
+	{
+		gen_rand_room(&levels[id]);	
+	}
+	normalize_level(&levels[id]);
+	get_render_map();
 	/* print_map(levels[id].lcd); */
 }
