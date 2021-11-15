@@ -45,6 +45,7 @@ int _main()
 		 *  case 2 -- move down
 		 *  case 3 -- move up
 		 * case 3 -- move the cursor (for attacking and reading)
+		 * case 4 -- actions! -- does not remove the cursor like case 2 does
 		 */
 		switch(temp_mode)
 		{
@@ -80,6 +81,14 @@ int _main()
 				break;
 
 			case 3:
+			//cursors n stuff
+				break;
+			case 4
+				if(temp_dir == 3)
+				{
+					// take action at player	
+					character_action(&player,to_pos(0,0));
+				}
 				break;
 
 		}
