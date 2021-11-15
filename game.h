@@ -168,13 +168,13 @@ int render_ascii(char val, struct pos p)
 // SPEED -- could be made faster by passing the pos by value
 void render_character(struct character * player)
 {
-	printf("%i %i",player->pos_screen.x, player->pos_screen.y);
+	/* printf("%i %i",player->pos_screen.x, player->pos_screen.y); */
 	entities_map[(player -> pos_screen.y * levels[cur_level].size.x) + player -> pos_screen.x] = player -> tile;
 }
 
 void alloc_maps_for_level(struct pos size)
 {
-	printf("%i %i %i %i\n",levels[cur_level].size.x, size.x, levels[cur_level].size.y,size.y);
+	/* printf("%i %i %i %i\n",levels[cur_level].size.x, size.x, levels[cur_level].size.y,size.y); */
 	free(game_map);
 	int mem_size = sizeof(char) * size.x * size.y;
 	game_map     = get_malloc(mem_size);
