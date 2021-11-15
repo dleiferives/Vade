@@ -86,6 +86,11 @@ int _main()
 				break;
 
 		}
+		// runs if the time has advanced. time does not 
+		if(g_time > old_g_time)
+		{
+			run entities code
+		}
 
 		render_character(&player);
 		get_render_map();

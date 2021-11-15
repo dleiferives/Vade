@@ -269,7 +269,4 @@ struct level * generate_level_structure(int id, int diff)
 		if(levels[id].map[i] == '.') levels[id].map[i] = ' ';
 		if(levels[id].map[i] == 'A') levels[id].map[i] = '.';
 	}
-
-	/* get_render_map(); */
-	/* print_map(levels[id].lcd); */
 }
