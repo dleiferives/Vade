@@ -122,7 +122,9 @@ int generate_paths(struct level * l, char in_c)
 	}
 	puts("2");
 	char_iterator = get_rand(char_iterator,0);
+	puts("3");
 	int char_iterator_2 =0;
+	puts("3");
 	int iterat_char_pos =0;
 	puts("4");
 	for(int i =0; i < (l[0].size.x* l[0].size.y); i++)
