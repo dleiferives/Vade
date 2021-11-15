@@ -49,10 +49,7 @@ void move_character(struct character * player,int x, int y)
 	if(t_step !=0)
 	{
 	puts("FxxxxUCKING SULS");
-		if((levels[cur_level].
-					map[get_level_p(x+player->pos_screen.x,
-													y+player->pos_screen.y)]) 
-				   == (' ' || '#'))
+		if((levels[cur_level].  map[get_level_p(x+player->pos_screen.x, y+player->pos_screen.y)]) == (' ' || '#'))
 		{ 
 			t_step = 0;
 		}
