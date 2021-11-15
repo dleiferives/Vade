@@ -92,11 +92,12 @@ int _main()
 				if(temp_dir == 2)
 				{
 					next_level(&player);
+
 					puts("1");
 				}
 					puts("8");
 				break;
-
+					reset_entity_map();
 					puts("7");
 		}
 		// runs if the time has advanced. time does not 
