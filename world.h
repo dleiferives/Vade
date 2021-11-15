@@ -255,7 +255,9 @@ struct pos generate_level_structure(int id, int diff)
 	}
 		puts("w");
 	normalize_level(&levels[id]);
+		puts("v");
 	struct level * l = &levels[id];
+		puts("s");
 	for(int y =0; y < diff_height; y++)
 	{
 		for(int x =0; x < diff_width; x++)
@@ -269,6 +271,7 @@ struct pos generate_level_structure(int id, int diff)
 			}
 		}
 	}
+		puts("t");
 	int floor_tiles=0;
 	for(int i=0; i<(diff_width*diff_height); i++)
 	{
@@ -279,6 +282,7 @@ struct pos generate_level_structure(int id, int diff)
 			floor_tiles++;
 		}
 	}
+		puts("u");
 	floor_tiles = get_rand(floor_tiles,0);
 	int character_pos = get_rand(floor_tiles,0);
 	result.x = character_pos % levels[id].size.x;
