@@ -192,18 +192,36 @@ void alloc_maps_for_level(struct pos size)
 #if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
 void print_map(struct pos p)
 {
-	lcd.clear();
-	lcd.setCursor(0, 0);
-	for(int i =0; i < lcd_width; i++)
+	tft.fillScreen(TFT_BLACK);
+	unsigned long start = micros();
+	tft.setCursor(0, 0);
+  tft.setTextColor(TFT_WHITE); 
+	tft.setTextSize(1);
+  tft.println("Hello World!");
+	int l_x = levels[cur_level].size.x;
+	int l_y = levels[cur_level].size.y;
+	int width  = (AUD_WIDTH > l_x)  ? l_x : AUD_WIDTH; // width of level on screen
+	int height = (AUD_HEIGHT > l_y) ? l_y : AUD_HEIGHT; // height of level on screen
+	struct pos offsets = {AUD_WIDTH - width, AUD_HEIGHT - height};
+	struct pos final_pos;
+	final_pos.x = ((p.x+width)>l_x) ? l_x-width : p.x;
+	final_pos.x = (final_pos.x < 0) ? 0 : final_pos.x;
+	final_pos.y = ((p.y+height)>l_y) ? l_y-height : p.y;
+	final_pos.y = (final_pos.y < 0) ? 0 : final_pos.y;
+	int cursor_print_x =0;
+	int cursor_print_y = offsets.y/2;
+	tft.setCursor(cursor_print_x*8,cursor_print_y*8);
+	for(int y=0; y<height; y++)
 	{
-		lcd.print(render_map[i+(p.y*lcd_width)]);
+			cursor_print_x = offsets.x/2;
+			tft.setCursor(cursor_print_x*8,cursor_print_y*8);
+		for(int x=0; x<width; x++)
+		{
+			tft.print((char) render_map[(final_pos.x+x)+((final_pos.y+y) * l_x)]);	
+		}
+			cursor_print_y++;
 	}
-	lcd.setCursor(0, 1);
-	for(int i =0; i < lcd_width; i++)
-	{
-		lcd.print(render_map[i+lcd_width+(p.y*lcd_width)]);
-	}
-	delay(200);
+  return micros() - start;
 }
 
 #elif defined(WIN32)

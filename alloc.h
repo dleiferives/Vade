@@ -5,22 +5,26 @@
 	void setup_arduino()
 	{
     Serial.begin(9600);
-		pinMode(A0, INPUT); 
-		pinMode(A1, INPUT); 
-		pinMode(A2, INPUT);
-		pinMode(A4, INPUT);
-		pinMode(A8, INPUT);
-		pinMode(A9 , INPUT);
-		pinMode(A14, INPUT);
-		pinMode(A15, INPUT);
-		pinMode(52, OUTPUT);
+		Serial.println("ARDUINO LOADED!");
+		IrReceiver.begin(irPin, ENABLE_LED_FEEDBACK);
 
-		lcd.begin(16,2);
+		//Setting up the pins to be used
+		pinMode(interruptPinM1,INPUT_PULLUP);
+		pinMode(interruptPinM2,INPUT_PULLUP);
+		pinMode(interruptPinM3,INPUT_PULLUP);
+		pinMode(interruptPinM4,INPUT_PULLUP);
+		attachInterrupt(digitalPinToInterrupt(interruptPinM1), int_pin_to_mode_1, FALLING);
+		attachInterrupt(digitalPinToInterrupt(interruptPinM2), int_pin_to_mode_2, FALLING);
+		attachInterrupt(digitalPinToInterrupt(interruptPinM3), int_pin_to_mode_3, FALLING);
+		attachInterrupt(digitalPinToInterrupt(interruptPinM4), int_pin_to_mode_4, FALLING);
+
+		tft.begin();
+		tft.setRotation(1);
 		randomSeed(analogRead(0));
 }
 
 
-	}
+	
 
 #elif defined(WIN32)
 	void setup_arduino(){}

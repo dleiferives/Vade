@@ -1,8 +1,9 @@
 /* <-- library definitions --> */
 #if defined(__AVT_ATmega1028__) || defined(__AVR_ATmega2560__)
-	#include <LiquidCrystal.h>
-	
-	LiquidCrystal lcd(2,3,4,5,11,12);//12,11,5,4,3,2);
+ #include <TFT_HX8357.h> // Hardware-specific library
+ #include <IRremote.h>
+  // Invoke library
+  TFT_HX8357 tft = TFT_HX8357();	
 #elif defined(WIN32)
 	#include <stdio.h>
 	#include <stdlib.h>
@@ -129,15 +130,16 @@ char cursor_icon = '$';
 #if defined(__AVT_ATmega1028__) || defined(__AVR_ATmega2560__)
 	/* input.h */
 	struct uint12By2 analogIn;
-	int pA2;
-	int pA4;
-	int pA14;
-	int pA8;
-	int pA15;
-	int p52;
+	int irPin = 7;
+	long int ir_data;
+	int arduino_analog_x = A1;
+	int arduino_analog_y = A2;
 	int arduino_toggle =1;
-	const int interruptPinM1 = 18;
-	const int interruptPinM2 = 19;
+	const int interruptPinM1 = 19;
+	const int interruptPinM2 = 18;
+	const int interruptPinM3 = 2;
+	const int interruptPinM4 = 3;
+
 
 
 #elif defined(WIN32)
@@ -163,33 +165,47 @@ void * get_malloc(unsigned int size)
 
 char get_char(struct level *l, int x, int y);
 
+int get_level_p(struct level * l, int x, int y);
+
+void next_level(struct character * player);
 struct pos to_pos(int x, int y)
 {
 	struct pos result = {x,y};
 	return result;
 }
 #if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
-	void callInteruptM2()
-	{
-		input_mode = 2;	
-		delayMicroseconds(10);
-		while(digitalRead(interruptPinM2) == LOW){}
-	}
-
-	void callInteruptM1()
-	{
-		input_mode = 1;	
-		delayMicroseconds(10);
-		while(digitalRead(interruptPinM1) == LOW){}
-	}
 	void seed_rand()
 	{
-
 		randomSeed(analogRead(0));
 	}
 	int get_rand(int max, int min)
 	{
 		return random(min,max);	
+	}
+	
+	void int_pin_to_mode_1()
+	{
+		input_mode = 1;	
+		delayMicroseconds(10);
+		while(digitalRead(interruptPinM1) == LOW){}
+	}
+	void int_pin_to_mode_2()
+	{
+		input_mode = 2;	
+		delayMicroseconds(10);
+		while(digitalRead(interruptPinM2) == LOW){}
+	}
+	void int_pin_to_mode_3()
+	{
+		input_mode = 3;	
+		delayMicroseconds(10);
+		while(digitalRead(interruptPinM3) == LOW){}
+	}
+	void int_pin_to_mode_4()
+	{
+		input_mode = 4;	
+		delayMicroseconds(10);
+		while(digitalRead(interruptPinM4) == LOW){}
 	}
 #elif defined(WIN32)
 	void seed_rand()

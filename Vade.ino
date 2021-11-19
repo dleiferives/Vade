@@ -17,7 +17,7 @@ int _main()
 	setup_arduino(); // alloc.h
 	init_maps();     // game.h
 	get_render_map();// game.h 
-	/* print_map(levels[cur_level].lcd); //game.h */
+	print_map(levels[cur_level].lcd); //game.h
 
 	//setting up the character
 	struct character player = init_character;
@@ -62,8 +62,8 @@ int _main()
 
 			case 2:
 				#if defined(__AVT_ATmega1028__) || defined(__AVR_ATmega2560__)
-					lcd.setCursor(0,0);
-					lcd.print(temp_dir);
+					tft.setCursor(0,0);
+					tft.print(temp_dir);
 				#endif
 				switch(temp_dir)
 				{
@@ -127,8 +127,9 @@ int _main()
 
 	void loop()
 	{
-		lcd.setCursor(0,0);
-		lcd.print(error_string);
+		tft.setCursor(0,0);
+		tft.fillScreen(TFT_BLACK);
+		tft.print(error_string);
 	}
 
 

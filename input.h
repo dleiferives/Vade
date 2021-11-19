@@ -2,31 +2,14 @@
 	
 	int handle_input()
 	{
-		analogIn.x = analogRead(A0); 
-    analogIn.y = analogRead(A1); 
-    pA2 = analogRead(A2);
-    pA4 = analogRead(A4);
-    pA14 = analogRead(A14);
-    pA8 = analogRead(A8);
-
-		attachInterrupt(digitalPinToInterrupt(interruptPinM1), callInteruptM1, LOW);
-		attachInterrupt(digitalPinToInterrupt(interruptPinM2), callInteruptM2, LOW);
+		analogIn.x = 1023 - analogRead(arduino_analog_x); 
+    analogIn.y = analogRead(arduino_analog_y); 
+		IrReceiver.decode();
 		return 0;
 	}
 	
 	int get_mode()
 	{
-		if((arduino_toggle ==1) && (pA4>900)) arduino_toggle = 2;
-    if((arduino_toggle ==2) && (pA4<900))
-		{
-			arduino_toggle = 3;
-			input_mode =2;
-		}
-    if((arduino_toggle ==3) && (pA4>900))
-		{
-			input_mode =1;
-			arduino_toggle = 1;
-		}
 		return input_mode;	
 	}
 
