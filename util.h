@@ -159,6 +159,9 @@ void * get_malloc(unsigned int size)
 	void *tmp = malloc(size);
 	if(tmp == NULL)
 	{
+    #if defined(WIN32)
+		printf("Malloc ret NULL ptr");
+	  #endif
 		error_string = "malloc ret NULL ptr";
 		loop();
 	}
