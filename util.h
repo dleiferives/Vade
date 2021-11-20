@@ -128,6 +128,7 @@ unsigned long old_g_time=0;  // the previous global time
 struct pos cursor_pos;
 char cursor_icon = '$';
 
+
 #if defined(__AVT_ATmega1028__) || defined(__AVR_ATmega2560__)
 	/* input.h */
 	struct uint12By2 analogIn;
@@ -150,6 +151,8 @@ char cursor_icon = '$';
 	/* util.h */
 	time_t rand_t;
 	void loop()	{};
+	
+	int mem_alloc =0;
 #endif
 
 /* <-- global functions --> */
@@ -157,14 +160,18 @@ char cursor_icon = '$';
 void * get_malloc(unsigned int size)
 {
 	void *tmp = malloc(size);
+	mem_alloc+=size;
 	if(tmp == NULL)
 	{
     #if defined(WIN32)
-		printf("Malloc ret NULL ptr");
+		printf("Malloc ret NULL ptr : heap = %i",mem_alloc);
 	  #endif
 		error_string = "malloc ret NULL ptr";
 		loop();
-	}
+	}  
+	#if defined(WIN32)
+	printf("heap = %i",mem_alloc);
+	#endif
 	return tmp;
 }
 
