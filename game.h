@@ -234,7 +234,7 @@ void print_aud(struct pos p)
 			for(int ox =0; ox < offsets.x/2; ox++) putchar(' ');
 		for(int x=0; x<width; x++)
 		{
-			putchar(render_map[(final_pos.x+x)+((final_pos.y+y) * l_x)]);	
+			putchar(game_map[(final_pos.x+x)+((final_pos.y+y) * l_x)]);	
 		}
 			for(int ox =0; ox < offsets.x/2; ox++) putchar(' ');
 				putchar('|');
