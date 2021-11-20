@@ -207,7 +207,7 @@ void render_entities(struct mob * m, int num_mobs)
 {
 	for(int i=0; i<num_mobs; i++)
 	{
-		printf("mob_%i_pos = %i, %i\n",i,m[i]->pos_screen.x, m[i]->pos_screen.y);
+		printf("mob_%i_pos = %i, %i\n",i,m[i].pos_screen.x, m[i].pos_screen.y);
 	}
 }
 
