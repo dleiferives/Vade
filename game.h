@@ -135,6 +135,14 @@ int render_ascii(char val, struct pos p)
 
 
 // SPEED -- could be made faster by passing the pos by value
+
+
+
+
+
+
+
+#if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
 void render_character(struct character * player)
 {
   tft.setTextColor(TFT_BLUE, TFT_BLACK);
@@ -152,14 +160,6 @@ void render_entities(struct mob * m, int num_mobs)
 	}
 }
 
-
-
-
-
-
-
-
-#if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
 void print_map(struct pos p)
 {
 	tft.fillScreen(TFT_BLACK);
@@ -198,6 +198,19 @@ void print_map(struct pos p)
 }
 
 #elif defined(WIN32)
+void render_character(struct character * player)
+{
+	printf("player_pos = %i, %i\n",player->pos_screen.x, player->pos_screen.y);
+}
+
+void render_entities(struct mob * m, int num_mobs)
+{
+	for(int i=0; i<num_mobs; i++)
+	{
+		printf("mob_%i_pos = %i, %i\n",i,player->pos_screen.x, player->pos_screen.y);
+	}
+}
+
 void print_aud(struct pos p)
 {
 	int l_x = levels[cur_level].size.x;
