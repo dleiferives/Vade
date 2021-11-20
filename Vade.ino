@@ -13,7 +13,7 @@
 int _main()
 {
 	//Setting up the game
-	tft.begin();
+	/* tft.begin(); */
 	setup_game(); // alloc.h
 	setup_arduino(); // alloc.h
 	print_map(levels[cur_level].lcd); //game.h
