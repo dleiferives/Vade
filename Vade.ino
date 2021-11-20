@@ -13,10 +13,9 @@
 int _main()
 {
 	//Setting up the game
+	tft.begin();
 	setup_game(); // alloc.h
 	setup_arduino(); // alloc.h
-	init_maps();     // game.h
-	get_render_map();// game.h 
 	print_map(levels[cur_level].lcd); //game.h
 
 	//setting up the character
@@ -32,7 +31,6 @@ int _main()
 	{
 		old_g_time = g_time;
 		handle_input(); //input.h
-		reset_entity_map(); // game.h -- render
 		int temp_mode = get_mode(); //input.h
 		int temp_dir = get_dir();   //input.h
 		
@@ -100,7 +98,6 @@ int _main()
 
 				}
 				break;
-					reset_entity_map();
 		}
 		// runs if the time has advanced. time does not 
 		if(g_time > old_g_time)
@@ -109,8 +106,6 @@ int _main()
 		}
 
 		render_character(&player);
-		get_render_map();
-		print_map(levels[cur_level].lcd);
 
 	}
 	

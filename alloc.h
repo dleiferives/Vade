@@ -18,9 +18,11 @@
 		attachInterrupt(digitalPinToInterrupt(interruptPinM3), int_pin_to_mode_3, FALLING);
 		attachInterrupt(digitalPinToInterrupt(interruptPinM4), int_pin_to_mode_4, FALLING);
 
-		tft.begin();
+		/* tft.begin(); */
 		tft.setRotation(1);
 		randomSeed(analogRead(0));
+		int padding = tft.textWidth("9", game_font); // get the width of the text in pixels
+		tft.setTextPadding(padding);
 }
 
 
@@ -33,23 +35,21 @@
 void setup_game()
 {
 	/* main.c || testing.ino */
-	error_string = (char *)malloc(sizeof(char) * 100);
+	game_map = get_malloc(sizeof(char) * map_size_x * map_size_y);
+	error_string = get_malloc(sizeof(char) * 100);
 
 	/* world.h */
-	levels = (struct level*)malloc(sizeof(struct level) * num_levels);
-	/* levels[cur_level] = gen_level(cur_level, 1, GEN_WIDTH, GEN_HEIGHT, GEN_MOBS); */ 
+	levels = get_malloc(sizeof(struct level) * num_levels);
 	 generate_level_structure(cur_level, 0);
+
 	/* items.h */
-	items = (struct item*)malloc(sizeof(struct item) * num_global_items);
+	items = get_malloc(sizeof(struct item) * num_global_items);
 	for(int i =0; i<num_global_items; i++)
 	{
 		items[i] = init_item;
 	}
 
 	/* render.h */
-	game_map = (char *) malloc(sizeof(char) * levels[cur_level].size.x * levels[cur_level].size.y);
-	entities_map = (char *) malloc(sizeof(char) * levels[cur_level].size.x * levels[cur_level].size.y);
-	render_map = (char *) malloc(sizeof(char) * levels[cur_level].size.x * levels[cur_level].size.y);
 
 	/* util.h */
   #if defined(WIN32)
@@ -64,9 +64,7 @@ void cleanup_game()
 	/* main.c || testing.ino */
 	free(error_string);
 	/* render.h */
-	free(game_map);
-	free(entities_map);
-	free(render_map);
+	free(map);
 	/* world.h */
 	for(int i =0; i <num_levels; i++)
 		destroy_level(&levels[i]);

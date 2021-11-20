@@ -40,7 +40,7 @@ int add_item(struct character * player, int item_id)
 
 char rel_char(struct pos p1, struct pos p2)
 {
-	char result = levels[cur_level].map[get_level_p(&levels[cur_level],p1.x+p2.x, p1.y+p2.y)];
+	char result = game_map[get_level_p(&levels[cur_level],p1.x+p2.x, p1.y+p2.y)];
 	putchar(result);
 	return result;
 }
@@ -109,45 +109,14 @@ int character_action(struct character * player, struct pos p)
  *
  */
 /* how the rendering ruitine works ... */
-/* 1 - the room/ world where the game takes place is defined and stored as a map "game_map" */
-/* 2 - the entities (players, mobs) are recorded to their own map "entities_map" */
-/* 3 - the "game_map" and the "entities_map" are both stored into the "render_map" */ 
+/* 1 - the room/ world where the game takes place is defined and stored as a map level map */
+/* 2 -  On game rendering entities are put ontop of level map */
 /* render map is put to the screen, for win32 this is done with the printf, arduino its lcd.print but relative to the screen size */
-
-void init_maps(void)
+void reset_map(void)
 {
-	for(int y =0; y <levels[cur_level].size.y; y++)
+	for(int i =0; i < (map_size_x * map_size_y); i++)
 	{
-		for(int x =0; x <levels[cur_level].size.x; x++)
-		{
-			int m_pos = (y * levels[cur_level].size.x) + x;
-			game_map[m_pos] = levels[cur_level].map[m_pos];
-			entities_map[m_pos] = 0;
-			render_map[m_pos] = (entities_map[m_pos] == 0) ? game_map[m_pos] : entities_map[m_pos];
-		}
-	}
-}
-
-void get_render_map(void)
-{
-	int pos =0;
-	char output =0;
-	for(int y =0; y <levels[cur_level].size.y; y++)
-	{
-		for(int x =0; x <levels[cur_level].size.x; x++)
-		{
-			pos = (y * levels[cur_level].size.x) + x;
-			output = (entities_map[pos] == 0) ? game_map[pos] : entities_map[pos];
-			render_map[y * levels[cur_level].size.x + x] = output;
-		}
-	}
-}
-
-void reset_entity_map(void)
-{
-	for(int i =0; i < (levels[cur_level].size.x * levels[cur_level].size.y); i++)
-	{
-		entities_map[i] = 0;
+		game_map[i] = 0;
 	}
 }
 
@@ -157,7 +126,7 @@ int render_ascii(char val, struct pos p)
 {
 	if((p.x >=0) && (p.x < levels[cur_level].size.x) && (p.y >=0) && (p.y < levels[cur_level].size.y))
 	{
-		game_map[(p.y * levels[cur_level].size.x) + p.x] = val;
+	  game_map[(p.y * levels[cur_level].size.x) + p.x] = val;
 		return 0;
 	}
 	if((p.x <0) || (p.x <= levels[cur_level].size.x) || (p.y < 0) || (p.y <=levels[cur_level].size.y)) return 1;
@@ -168,18 +137,19 @@ int render_ascii(char val, struct pos p)
 // SPEED -- could be made faster by passing the pos by value
 void render_character(struct character * player)
 {
-	/* printf("%i %i",player->pos_screen.x, player->pos_screen.y); */
-	entities_map[(player -> pos_screen.y * levels[cur_level].size.x) + player -> pos_screen.x] = player -> tile;
+  tft.setTextColor(TFT_BLUE, TFT_BLACK);
+	tft.setCursor(map_tl.x + (player->pos_screen.x*8),map_tl.y + (player->pos_screen.y*8));
+	tft.print(player->tile);
 }
 
-void alloc_maps_for_level(struct pos size)
+void render_entities(struct mob * m, int num_mobs)
 {
-	/* printf("%i %i %i %i\n",levels[cur_level].size.x, size.x, levels[cur_level].size.y,size.y); */
-	free(game_map);
-	int mem_size = sizeof(char) * size.x * size.y;
-	game_map     = get_malloc(mem_size);
-	entities_map = get_malloc(mem_size);
-	render_map   = get_malloc(mem_size);
+	for(int i=0; i<num_mobs; i++)
+	{
+		tft.setTextColor(TFT_RED, TFT_BLACK);
+		tft.setCursor(map_tl.x + (m[i].pos_screen.x*8),map_tl.y + (m[i].pos_screen.y*8));
+		tft.print(m[i].tile);
+	}
 }
 
 
@@ -211,13 +181,16 @@ void print_map(struct pos p)
 	int cursor_print_x =0;
 	int cursor_print_y = offsets.y/2;
 	tft.setCursor(cursor_print_x*8,cursor_print_y*8);
+	map_tl.x = (offsets.x/2) * 8;
+	map_tl.y = (offsets.y/2) * 8;
+	tft.setTextColor(TFT_WHITE,TFT_BLACK);
 	for(int y=0; y<height; y++)
 	{
 			cursor_print_x = offsets.x/2;
 			tft.setCursor(cursor_print_x*8,cursor_print_y*8);
 		for(int x=0; x<width; x++)
 		{
-			tft.print((char) render_map[(final_pos.x+x)+((final_pos.y+y) * l_x)]);	
+			tft.print((char) game_map[(final_pos.x+x)+((final_pos.y+y) * l_x)]);	
 		}
 			cursor_print_y++;
 	}

@@ -78,7 +78,6 @@ struct level
 {
 	int id;
 	int diff;
-	char * map;
 	int num_mobs;
 	struct mob * mobs;
 	struct pos size;
@@ -111,15 +110,17 @@ int cur_global_items = 1;
 char * error_string;
 int input_mode =1; /* from input.h */
 
-char * game_map;
-char * entities_map;
-char * render_map;
-
 char room_char = 'A'; // for map generation
 
 int num_levels = 20;
 int cur_level  = 0;
 struct level * levels;
+
+char * game_map;
+int map_size_x = 80;
+int map_size_y = 80;
+struct pos map_tl;
+int game_font =1;
 
 unsigned long g_time =0;// global time
 unsigned long old_g_time=0;  // the previous global time
@@ -139,6 +140,7 @@ char cursor_icon = '$';
 	const int interruptPinM2 = 18;
 	const int interruptPinM3 = 2;
 	const int interruptPinM4 = 3;
+
 
 
 
