@@ -64,7 +64,7 @@ void cleanup_game()
 	/* main.c || testing.ino */
 	free(error_string);
 	/* render.h */
-	free(map);
+	free(game_map);
 	/* world.h */
 	for(int i =0; i <num_levels; i++)
 		destroy_level(&levels[i]);
