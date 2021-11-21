@@ -41,6 +41,7 @@ void setup_game()
 	/* world.h */
 	levels = get_malloc(sizeof(struct level) * num_levels);
 	 generate_level_structure(cur_level, 0);
+	 puts("level done");
 
 	/* items.h */
 	items = get_malloc(sizeof(struct item) * num_global_items);
