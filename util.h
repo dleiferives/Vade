@@ -62,11 +62,10 @@ struct mob
 	struct stats base_stats;
   struct stats comp_stats;
 	struct pos pos_screen;
-	int items[5];
 	int nice;
 	int ranged;
 	char tile;
-}const init_mob = {0,init_stats, init_stats, init_pos, {0,0,0,0,0},0,0,0};
+}const init_mob = {0,init_stats, init_stats, init_pos,0,0,0};
 
 struct cursor
 {
