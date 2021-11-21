@@ -44,11 +44,11 @@ void setup_game()
 	 puts("level done");
 
 	/* items.h */
-	items = get_malloc(sizeof(struct item) * num_global_items);
-	for(int i =0; i<num_global_items; i++)
-	{
-		items[i] = init_item;
-	}
+	/* items = get_malloc(sizeof(struct item) * num_global_items); */
+	/* for(int i =0; i<num_global_items; i++) */
+	/* { */
+	/* 	items[i] = init_item; */
+	/* } */
 
 	/* render.h */
 
