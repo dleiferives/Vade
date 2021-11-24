@@ -6,16 +6,9 @@ struct level gen_level(int id, int diff, int width, int height, int mobs)
 	l.size.x   = width;
 	l.size.y   = height;
 	l.lcd      = init_pos;
-	l.num_mobs = mobs;
-
-	l.mobs     = (struct mob*)malloc(sizeof(struct mob) * mobs);
 	return l;
 }
 
-void destroy_level(struct level * l)
-{
-	free(l->mobs);
-}
 
 int get_level_p(struct level * l, int x, int y)
 {
@@ -42,24 +35,91 @@ int char_dist(struct level * l, int pos, int pos2)
 	return dist;
 }
 
-int flood_char(struct level * l, int x, int y, char c)
+struct pos get_r_char(char c)
 {
-	// is this character illegal?
-	if(get_char(l,x,y) == c )
+	// randomize level generation
+	seed_rand();
+	struct pos result = {0,0};
+	// find the amount of the character
+	int num =0;
+	for(int i =0; i <levels[cur_level].size.x * levels[cur_level].size.y; i++)
 	{
-		return 1;
+		if(game_map[i] == c) num++;
 	}
-	if(get_char(l,x,y) == '.') return 1;
-	if(get_char(l,x,y) == 0) return 1;
-	// no? change it call on surrounding characters
-	if(get_char(l,x,y) != c)
+	int num2 = get_rand(num,1);
+	//get the pid of the random character
+	num =0;
+	for(int i =0; i <levels[cur_level].size.x * levels[cur_level].size.y; i++)
 	{
-		game_map[get_level_p(l,x,y)] = c;
-		flood_char(l,x+1,y,c);
-		flood_char(l,x,y+1,c);
-		flood_char(l,x-1,y,c);
-		flood_char(l,x,y-1,c);
+		if(game_map[i] == c) num++;
+		if(num == num2)
+		{
+			num2 =i;
+			break;
+		}
 	}
+	if(num2 ==0 ) return result;
+	// get pos of pid
+	result.x = num2 % levels[cur_level].size.x; 
+	result.y = num2 / levels[cur_level].size.x; 
+
+	return result;
+}
+
+int flood_char(struct level * l,char c, struct pos p)
+{
+	//slower code so not to use up memory, since the stack will fill up with a recursive function of this size... we will use something far slower! iteraton
+	//check if the character is illegal!
+	print_map(p);
+	game_map[get_level_p(l,p.x,p.y)] = c;
+	int reset =0;
+	for(int i =0; i<(l->size.x * l->size.y); i++)
+	{
+		reset = 0;
+		if(game_map[i] == 0) 
+			continue;
+		if(game_map[i] == 1)
+			continue;
+		//check the char below
+		if((i + l->size.x) < (l->size.x * l->size.y))
+		{
+			if((game_map[i + (l->size.x)] == 1) && (game_map[i] == 2))
+			{
+				game_map[i + (l->size.x)] = 2;
+				reset =1;
+			}
+		}
+		// check the char above
+		if((i - l->size.x) > (0))
+		{
+			if((game_map[i - (l->size.x)] == 1) && (game_map[i] == 2))
+			{
+				game_map[i - (l->size.x)] = 2;
+				reset =1;
+			}
+		}
+
+		if(((i + 1) < (l->size.x * l->size.y)) && ( ((i+1)/l->size.x) == (i/l->size.x)))
+		{
+			if((game_map[i + 1] == 1) && (game_map[i] == 2))
+			{
+				game_map[i + 1] = 2;
+				reset =1;
+			}
+		}
+
+		if(((i - 1) < (l->size.x * l->size.y)) && ( ((i-1)/l->size.x) == (i/l->size.x)))
+		{
+			if((game_map[i - 1] == 1) && (game_map[i] == 2))
+			{
+				game_map[i - 1] = 2;
+				reset =1;
+			}
+		}
+		if(reset ==1)
+			i =-1;
+	}
+	print_map(p);
 	return 0;
 }
 
@@ -71,23 +131,11 @@ int generate_room(struct level * l, unsigned int room_x, unsigned int room_y, un
 {
 	if((room_x + width) > l[0].size.x) return 0;
 	if((room_y + height) > l[0].size.y) return 0;
-	for(int y =room_y; y < height+room_y; y++)
+	for(int y = 0; y<height; y++)
 	{
-		for(int x =room_x; x < width+room_x; x++)
+		for(int x =0; x<width; x++)
 		{
-			char cur = game_map[get_level_p(l,x,y)];
-			if(cur != '.')
-			{
-				if(c != '.')
-				{
-					/* clears the memory of this room and its overlaping room */
-					generate_room(l,room_x,room_y,width,height,'.');
-					/* renders this room with the last room's character */
-					generate_room(l,room_x,room_y,width,height,cur);
-					return 2;
-				}
-			}
-			game_map[get_level_p(l,x,y)] = c;
+			game_map[get_level_p(&levels[cur_level],room_x+x,room_y+y)] = c;
 		}
 	}
 	return 1;
@@ -95,159 +143,93 @@ int generate_room(struct level * l, unsigned int room_x, unsigned int room_y, un
 
 int gen_rand_room(struct level * l)
 {
-	int w = get_rand(l[0].size.x/10 +2 , 2);
-	int h = get_rand(l[0].size.y/8+2 , 2);
+	//seed the random num generation
+	seed_rand();
+	// generate based off of random width height x and y then build the room
+	int w = get_rand(l[0].size.x/10 +10 , 10);
+	int h = get_rand(l[0].size.y/8+10 , 10);
 	int x = get_rand(l[0].size.x, 0);
 	int y = get_rand(l[0].size.x, 0);
-	int result = generate_room(l,x,y,w,h,room_char);
-	if(result == 1) room_char++;
+	int result = generate_room(l,x,y,w,h,1);
 	if(result == 0) gen_rand_room(l);
 	return result;
 }
 
+
 int char_iterator_old =0;
 int char_iterator_old_old =1;
-int generate_paths(struct level * l, char in_c)
-{
-	seed_rand();
-	/* cut path to closest thing that is not this value that is greater than 'a' */
-	/* find number of character */
-	int char_iterator =0;
-	for(int i =0; i < (l[0].size.x * l[0].size.y); i++)
-	{
-		if( in_c == game_map[i]) char_iterator++;
-	}
-	if(char_iterator == 0) return 0;
-	/* printf("a%i",char_iterator); */
-	char_iterator = get_rand(char_iterator,0);
-	int char_iterator_2 =0;
-	int iterat_char_pos =0;
-	for(int i =0; i < (l[0].size.x* l[0].size.y); i++)
-	{
-		if( in_c == game_map[i]) char_iterator_2++;
-		if(char_iterator_2 == char_iterator)
-		{
-			iterat_char_pos = i;
-			break;
-		}
-	}
-	/* find distance to next closest value > 'a' */
-	int low_dist =l[0].size.x * l[0].size.x;
-	int low_dist_pos=0;
-	for(int i =0; i < (l[0].size.x * l[0].size.y); i++)
-	{
-		if((((game_map[i] >= 'a') && (game_map[i] <= 'z')) || ((game_map[i]>='A') && (game_map[i] <='Z')) ) && (game_map[i] != game_map[iterat_char_pos]))
-		{
-			int temp = char_dist(l,iterat_char_pos, i);
-			if(temp < low_dist)
-			{
-				low_dist = temp;
-				low_dist_pos = i;
-			}
-		}
-	}
 
-	int dx = (iterat_char_pos % l[0].size.x) - (low_dist_pos % l[0].size.x);
-	int dy = (iterat_char_pos / l[0].size.x) - (low_dist_pos / l[0].size.x);
+int generate_path(struct level * l)
+{
+	//seed random number generation
+	seed_rand();
+	struct pos p1 = get_r_char(1);
+	//set the connecting chars to 2
+	flood_char(l,2,p1);
+
+	// get position of the fellows on the other sides of each other
+	p1 = get_r_char(2);
+	struct pos p2 = get_r_char(1);
+	//determine if everything is connected together
+	if((p2.x == 0) && (p2.y == 0))
+		return 1;
+	if((p2.x == 1) && (p2.y == 0))
+		return 1;
+	
+	// generate the paths between them
+	int dx = p2.x - p1.x;
+	int dy = p2.y - p1.y;
   int x_sign = (dx > 0) ? 1 : -1;
   int y_sign = (dy > 0) ? 1 : -1;
-	char c1 = game_map[iterat_char_pos];
-	char c2 = game_map[low_dist_pos];
+	char c1 = 1;
+	char c2 = 2;
 
 	
-	int cursor_x = low_dist_pos % l[0].size.x;
-	int cursor_y = low_dist_pos / l[0].size.x;
+	int cursor_x = p1.x;
+	int cursor_y = p1.y;
 	for(int y =0; y < (dy * y_sign); y++)
 	{
 		char tmp_char = game_map[get_level_p(l,cursor_x,cursor_y)];
 			if((tmp_char != c1) && (tmp_char !=c2))
 			{
-				game_map[get_level_p(l,cursor_x,cursor_y)] = '*'; 
+				game_map[get_level_p(l,cursor_x,cursor_y)] = 3; 
 			}
 		cursor_y += y_sign;
 	}
 
 	for(int x =0; x < (dx * x_sign); x++)
 	{
-		char tmp_char = game_map[get_level_p(l,cursor_x,cursor_y)];
+			char tmp_char = game_map[get_level_p(l,cursor_x,cursor_y)];
 			if((tmp_char != c1) && (tmp_char !=c2))
 			{
-				game_map[get_level_p(l,cursor_x,cursor_y)] = '*'; 
+				game_map[get_level_p(l,cursor_x,cursor_y)] = 3; 
 			}
 		cursor_x += x_sign;
 	}
+
+	return 0;
 }
 
 
 int normalize_level(struct level * l)
 {
-	char flood_var = 'a';
-	for(int y =0; y < l[0].size.y; y++)
+	for(int i=0; i < (l->size.x * l->size.y);i++)
 	{
-		for(int x =0; x < l[0].size.x; x++)
+		if(game_map[i] != 0)
 		{
-			if(game_map[get_level_p(l,x,y)] != '.' )
-			{
-				if(game_map[get_level_p(l,x,y)] < 'a')
-				{
-
-				flood_char(l,x,y,flood_var);
-				flood_var++;
-
-				}
-			}
+			game_map[i] = 1;
 		}
 	}
+	return 0;
+}
 
-	char max =0;
-	for(int i =0; i < (l[0].size.x * l[0].size.y); i++)
+int generate_paths(struct level *l)
+{
+	while(generate_path(l) == 0)
 	{
-		max = (game_map[i] > max) ? game_map[i] : max;
-	}
-
-	for(int i =max; i >= 'a'; i--)
-	{
-		generate_paths(l,i);
-	}
-
-	char flood_var2 = 'A';
-	for(int y =0; y < l[0].size.y; y++)
-	{
-		for(int x =0; x < l[0].size.x; x++)
-		{
-			if(game_map[get_level_p(l,x,y)] != '.' )
-			{
-				if((game_map[get_level_p(l,x,y)] >='a') || (game_map[get_level_p(l,x,y)] == '+'))
-				{
-
-				flood_char(l,x,y,flood_var2);
-				flood_var2++;
-
-				}
-			}
-		}
-	}
-	char max2 =0;
-	for(int i =0; i < (l[0].size.x * l[0].size.y); i++)
-	{
-		max2 = (game_map[i] > max2) ? game_map[i] : max2;
-	}
-
-	if((max2 != 'A') )
-	{
-		/* for(int y =0; y< levels[cur_level].size.y; y++) */
-		/* { */
-		/* 	for(int x =0; x< levels[cur_level].size.x; x++) */
-		/* 	{ */
-		/* 		putchar(levels[cur_level].map[get_level_p(&levels[cur_level],x,y)]); */
-		/* 	} */
-		/* 	putchar(10); */
-		/* } */
-		/* printf("%i\n",max2); */
 		normalize_level(l);
 	}
-
-	return 0;
+	normalize_level(l);
 }
 
 /* returns the position of the player in the new level */
@@ -258,19 +240,37 @@ struct pos generate_level_structure(int id, int diff)
 	//dificulty 0 - 1000
 	//width 30 - 300
 	//height 20 - 200
-	int diff_width = pow(2.7, ((float)diff/(float)2) ) + 19;
-	int diff_height = pow(2.7, ((float)diff/(float)2) )+ 19;
-	int diff_mobs = ((double) diff_width * (double) diff_height) * ((double)1.0- ((double) (((double)10.0)/((double) diff + (double) 10.0))));
+	/* int diff_width = pow(2.7, ((float)diff/(float)2) ) + 19; */
+	/* int diff_height = pow(2.7, ((float)diff/(float)2) )+ 19; */
+	int diff_width = 50; 
+	int diff_height = 50; 
+	/* int diff_mobs = ((double) diff_width * (double) diff_height) * ((double)1.0- ((double) (((double)10.0)/((double) diff + (double) 10.0)))); */
+	int diff_mobs = 1; 
 	int diff_rooms = pow(2.5, ((float)diff/(float)2) ) + 8;
+
+	if(diff_width > map_size_x)
+		diff_width = map_size_x;
+	if(diff_height > map_size_y)
+		diff_height = map_size_y;
 	levels[id] = gen_level(id,diff, diff_width, diff_height, diff_mobs);
+
 	for(int i=0; i < diff_width * diff_height; i++) {
-		game_map[i] = '.';
+		game_map[i] = 0;
 	}
 	for(int j=0; j< diff_rooms;j++)
 	{
 			gen_rand_room(&levels[id]);	
 	}
-	normalize_level(&levels[id]);
+
+	generate_paths(&levels[id]);
+	for(int i =0; i<(diff_width * diff_height); i++)
+	{
+		if(game_map[i] == 0)
+			game_map[i] = '.';
+		if(game_map[i] == 1)
+			game_map[i] = 'A';
+	}
+
 	struct level * l = &levels[id];
 	for(int y =0; y < diff_height; y++)
 	{
@@ -285,58 +285,24 @@ struct pos generate_level_structure(int id, int diff)
 			}
 		}
 	}
-	int floor_tiles=0;
-	for(int i=0; i<(diff_width*diff_height); i++)
-	{
-		if(game_map[i] == '.') game_map[i] = ' ';
-		if(game_map[i] == 'A')
-		{
-			game_map[i] = '.';
-			floor_tiles++;
-		}
-	}
-	floor_tiles = get_rand(floor_tiles,0);
-	int floor_tiles2 =0;
-	// error before here?
+
 	for(int i=0; i<(diff_width*diff_height); i++)
 	{
 		if(game_map[i] == '.')
-		{
-			floor_tiles2++;
-		}
-		if(floor_tiles2 == floor_tiles)
-		{
-			game_map[i] = '+';
-			break;
-		}
+			game_map[i] = ' ';
+		if(game_map[i] == 'A')
+			game_map[i] = '.';
 	}
-}
 
-struct pos get_rand_pos_of_char(char c)
-{
-	struct pos result;
-	int num =0;
-	for(int i =0; i <levels[cur_level].size.x * levels[cur_level].size.y; i++)
+	for(int y=0; y< diff_height; y++)
 	{
-		if(game_map[i] == c) num++;
-	}
-	seed_rand();
-	int num2 = get_rand(num,1);
-	num =0;
-	for(int i =0; i <levels[cur_level].size.x * levels[cur_level].size.y; i++)
-	{
-		if(game_map[i] == c) num++;
-		if(num == num2)
+		for(int x=0; x < diff_width; x++)
 		{
-			num2 =i;
-			break;
+			Serial.print(game_map[y * diff_width + x]);
 		}
+		Serial.print("\n");
 	}
-	if(num2 ==0 ) return result;
-	result.x = num2 % levels[cur_level].size.x; 
-	result.y = num2 / levels[cur_level].size.x; 
 
-	return result;
 }
 
 void next_level(struct character * player)
@@ -344,9 +310,9 @@ void next_level(struct character * player)
 	/* destroy_level(&levels[cur_level]); */
 	cur_level +=1;		
 	generate_level_structure(cur_level,cur_level);
-	player->pos_screen = get_rand_pos_of_char('.');
+	player->pos_screen = get_r_char('.');
 	levels[cur_level].lcd = player->pos_screen;
-	/* levels[cur_level].lcd.x += AUD_WIDTH /2; */
-	/* levels[cur_level].lcd.y += AUD_HEIGHT /2; */
+	levels[cur_level].lcd.x += AUD_WIDTH /2;
+	levels[cur_level].lcd.y += AUD_HEIGHT /2;
 	print_map(levels[cur_level].lcd);
 }

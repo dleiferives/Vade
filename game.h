@@ -145,8 +145,11 @@ int render_ascii(char val, struct pos p)
 #if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
 void render_character(struct character * player)
 {
+  tft.setTextColor(TFT_WHITE, TFT_BLACK);
+	tft.setCursor(map_tl.x + (player->pos_screen_old.x*8 - 8),map_tl.y + (player->pos_screen_old.y*16));
+	tft.print(game_map[get_level_p(&levels[cur_level],player->pos_screen_old.x, player->pos_screen_old.y)]);
   tft.setTextColor(TFT_BLUE, TFT_BLACK);
-	tft.setCursor(map_tl.x + (player->pos_screen.x*8),map_tl.y + (player->pos_screen.y*8));
+	tft.setCursor(map_tl.x + (player->pos_screen.x*8 - 8),map_tl.y + (player->pos_screen.y*16));
 	tft.print(player->tile);
 }
 
@@ -163,33 +166,36 @@ void render_entities(struct mob * m, int num_mobs)
 void print_map(struct pos p)
 {
 	tft.fillScreen(TFT_BLACK);
+	tft.setRotation(1);
 	unsigned long start = micros();
 	tft.setCursor(0, 0);
   tft.setTextColor(TFT_WHITE); 
-	tft.setTextSize(1);
-  tft.println("Hello World!");
+  tft.println("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+  tft.println("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+  tft.println("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ");
 	int l_x = levels[cur_level].size.x;
 	int l_y = levels[cur_level].size.y;
 	int width  = (AUD_WIDTH > l_x)  ? l_x : AUD_WIDTH; // width of level on screen
 	int height = (AUD_HEIGHT > l_y) ? l_y : AUD_HEIGHT; // height of level on screen
 	struct pos offsets = {AUD_WIDTH - width, AUD_HEIGHT - height};
 	struct pos final_pos;
-	final_pos.x = ((p.x+width)>l_x) ? l_x-width : p.x;
+	final_pos.x = ((p.x+width+levels[cur_level].lcd.x)>l_x) ? l_x-width : p.x+levels[cur_level].lcd.x;
 	final_pos.x = (final_pos.x < 0) ? 0 : final_pos.x;
-	final_pos.y = ((p.y+height)>l_y) ? l_y-height : p.y;
+	final_pos.y = ((p.y+height+levels[cur_level].lcd.y)>l_y) ? l_y-height : p.y+levels[cur_level].lcd.y;
 	final_pos.y = (final_pos.y < 0) ? 0 : final_pos.y;
 	int cursor_print_x =0;
-	int cursor_print_y = offsets.y/2;
-	tft.setCursor(cursor_print_x*8,cursor_print_y*8);
+	int cursor_print_y = 0;//offsets.y/2;
+	tft.setCursor(cursor_print_x*8,cursor_print_y*16);
 	map_tl.x = (offsets.x/2) * 8;
-	map_tl.y = (offsets.y/2) * 8;
+	/* map_tl.y = (offsets.y/2) * 16; */
 	tft.setTextColor(TFT_WHITE,TFT_BLACK);
 	for(int y=0; y<height; y++)
 	{
 			cursor_print_x = offsets.x/2;
-			tft.setCursor(cursor_print_x*8,cursor_print_y*8);
+			tft.setCursor(cursor_print_x*8,cursor_print_y*16);
 		for(int x=0; x<width; x++)
 		{
+			tft.setCursor((cursor_print_x++-1)*8,cursor_print_y*16);
 			tft.print((char) game_map[(final_pos.x+x)+((final_pos.y+y) * l_x)]);	
 		}
 			cursor_print_y++;

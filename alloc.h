@@ -21,8 +21,9 @@
 		/* tft.begin(); */
 		tft.setRotation(1);
 		randomSeed(analogRead(0));
-		int padding = tft.textWidth("9", game_font); // get the width of the text in pixels
+		int padding = tft.textWidth("9", 2); // get the width of the text in pixels
 		tft.setTextPadding(padding);
+		tft.setTextFont(2);
 }
 
 
@@ -34,14 +35,20 @@
 
 void setup_game()
 {
+	Serial.begin(9600);
+#if defined(__AVT_ATmega1028__) || defined(__AVR_ATmega2560__)
+	Serial.print("GAME SETUP STARTED\n");
+#endif
 	/* main.c || testing.ino */
-	game_map = get_malloc(sizeof(char) * map_size_x * map_size_y);
+	/* game_map = get_malloc(sizeof(char) * map_size_x * map_size_y); */
 	error_string = get_malloc(sizeof(char) * 100);
 
 	/* world.h */
 	levels = get_malloc(sizeof(struct level) * num_levels);
 	 generate_level_structure(cur_level, 0);
-	 puts("level done");
+#if defined(__AVT_ATmega1028__) || defined(__AVR_ATmega2560__)
+	Serial.print("LEVEL GENERATED\n");
+#endif
 
 	/* items.h */
 	/* items = get_malloc(sizeof(struct item) * num_global_items); */
@@ -67,8 +74,6 @@ void cleanup_game()
 	/* render.h */
 	free(game_map);
 	/* world.h */
-	for(int i =0; i <num_levels; i++)
-		destroy_level(&levels[i]);
 	free(levels);
 	/* items.h */
 	free(items);

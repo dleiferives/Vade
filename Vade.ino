@@ -12,8 +12,7 @@
 
 int _main()
 {
-	//Setting up the game
-	/* tft.begin(); */
+	tft.begin();
 	setup_game(); // alloc.h
 	setup_arduino(); // alloc.h
 	print_map(levels[cur_level].lcd); //game.h
@@ -24,7 +23,7 @@ int _main()
 	player.items[1] =0;
 	player.tile = '@';
 	add_item(&player, 2);
-	player.pos_screen = get_rand_pos_of_char('.');
+	player.pos_screen = get_r_char('.');
 
 	// gameplay loop
 	while(1)
@@ -56,6 +55,13 @@ int _main()
 				levels[cur_level].lcd.y = (levels[cur_level].lcd.y> levels[cur_level].size.y ) ? levels[cur_level].size.y  : levels[cur_level].lcd.y;
 				levels[cur_level].lcd.x = (levels[cur_level].lcd.x<0) ? 0 : levels[cur_level].lcd.x;
 				levels[cur_level].lcd.x = (levels[cur_level].lcd.x> levels[cur_level].size.x ) ? levels[cur_level].size.x  : levels[cur_level].lcd.x;
+				#if defined(__AVT_ATmega1028__) || defined(__AVR_ATmega2560__)
+					Serial.print(levels[cur_level].lcd.x);
+					Serial.print(levels[cur_level].lcd.y);
+				#endif
+				if(temp_dir != 4)
+					print_map(player.pos_screen);	
+				
 				break;
 
 			case 2:

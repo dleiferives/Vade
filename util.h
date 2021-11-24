@@ -14,7 +14,7 @@
 #define PLAYER_INVENTORY_SIZE 20
 #define MOB_INV_BASE 1
 #define AUD_WIDTH  60 
-#define AUD_HEIGHT 40 
+#define AUD_HEIGHT 30 
 
 /* <-- struct definitions --> */
 struct pos
@@ -77,8 +77,6 @@ struct level
 {
 	int id;
 	int diff;
-	int num_mobs;
-	struct mob * mobs;
 	struct pos size;
 	struct pos lcd;
 };
@@ -98,8 +96,6 @@ struct uint12By2
 };
 
 /* <-- gloabl variables --> */
-int lcd_width  = 60;
-int lcd_height = 40;
 /* items.h */
 struct item * items;
 
@@ -115,7 +111,7 @@ int num_levels = 20;
 int cur_level  = 0;
 struct level * levels;
 
-char * game_map;
+char game_map[6400];
 int map_size_x = 80;
 int map_size_y = 80;
 struct pos map_tl;
@@ -151,8 +147,8 @@ char cursor_icon = '$';
 	time_t rand_t;
 	void loop()	{};
 	
-	int mem_alloc =0;
 #endif
+	int mem_alloc =0;
 
 /* <-- global functions --> */
 
