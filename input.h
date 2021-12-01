@@ -1,74 +1,56 @@
 #if defined(__AVT_ATmega1028__) || defined(__AVR_ATmega2560__)
 	
-	int handle_input()
+	int handleInput()
 	{
-		analogIn.x = 1023 - analogRead(arduino_analog_x); 
-    analogIn.y = analogRead(arduino_analog_y); 
+		analogIn.x = 1023 - analogRead(arduinoAnalogX); 
+    analogIn.y = analogRead(arduinoAnalogY); 
+		IrReceiver.decode();
 		return 0;
 	}
 	
-	int get_mode()
+	int getMode()
 	{
-		/* if(IrReceiver.decode()) */
-		/* { */
-		/* 	if(IrReceiver.decodedIRData.command == 0xC) input_mode =1; */	
-		/* 	if(IrReceiver.decodedIRData.command == 0x18) input_mode =2; */	
-		/* 	if(IrReceiver.decodedIRData.command == 0x5E) input_mode =3; */	
-		/* 	if(IrReceiver.decodedIRData.command == 0x8) input_mode =4; */	
-		/* 	IrReceiver.resume(); */
-		/* } */
-		return input_mode;	
+		return inputMode;	
 	}
 
-	int get_dir()
+	int getDir()
 	{
 		int result =4;
 		if(analogIn.y > 800) result =1; 
 		if(analogIn.y < 200) result =0;
 		if(analogIn.x > 800) result =3;
 		if(analogIn.x < 200) result =2;
-		if(IrReceiver.decode())
-		{
-			Serial.print(IrReceiver.decodedIRData.command,HEX);
-			if(IrReceiver.decodedIRData.command == 0x9) result =0;	
-			if(IrReceiver.decodedIRData.command == 0x19) result =3;	
-			if(IrReceiver.decodedIRData.command == 0x7) result =1;	
-			if(IrReceiver.decodedIRData.command == 0x40) result =2;	
-			IrReceiver.resume();
-		}
 		if(result != 4)
 		{
 			Serial.print(analogIn.x);
 			Serial.print(" ");
 			Serial.print(analogIn.y);
-			Serial.print(" ");
-			Serial.print(IrReceiver.decodedIRData.command,HEX);
 			Serial.print("\n");
 		}
 		return result;
 	}
 #elif defined(WIN32)
 	char p;
-	int handle_input()
+	int handleInput()
 	{
 		p = getchar();
-		if(p == '\n') handle_input();
-		if(p == ' ') handle_input();
+		if(p == '\n') handleInput();
+		if(p == ' ') handleInput();
 		return 0;
 	}
 
-	int get_mode()
+	int getMode()
 	{
-		int result = input_mode;
-		if(p == '4') input_mode = 4;
-		if(p == '2') input_mode = 2;
-		if(p == '3') input_mode = 3;
-		if(p == '1') input_mode = 1;
-		printf("input_mode = %i, p = %c \n",input_mode,p);
-		return input_mode;
+		int result = inputMode;
+		if(p == '4') inputMode = 4;
+		if(p == '2') inputMode = 2;
+		if(p == '3') inputMode = 3;
+		if(p == '1') inputMode = 1;
+		printf("inputMode = %i, p = %c \n",inputMode,p);
+		return inputMode;
 	}
 
-	int get_dir()
+	int getDir()
 	{
 		int result =4;
 		if(p == 'w') result =2; 

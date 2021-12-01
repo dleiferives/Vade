@@ -2,7 +2,7 @@
 #if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
 
 
-	void setup_arduino()
+	void setupArduino()
 	{
     Serial.begin(9600);
 		Serial.println("ARDUINO LOADED!");
@@ -13,10 +13,10 @@
 		pinMode(interruptPinM2,INPUT_PULLUP);
 		pinMode(interruptPinM3,INPUT_PULLUP);
 		pinMode(interruptPinM4,INPUT_PULLUP);
-		attachInterrupt(digitalPinToInterrupt(interruptPinM1), int_pin_to_mode_1, FALLING);
-		attachInterrupt(digitalPinToInterrupt(interruptPinM2), int_pin_to_mode_2, FALLING);
-		attachInterrupt(digitalPinToInterrupt(interruptPinM3), int_pin_to_mode_3, FALLING);
-		attachInterrupt(digitalPinToInterrupt(interruptPinM4), int_pin_to_mode_4, FALLING);
+		attachInterrupt(digitalPinToInterrupt(interruptPinM1), intPinToMode1, FALLING);
+		attachInterrupt(digitalPinToInterrupt(interruptPinM2), intPinToMode2, FALLING);
+		attachInterrupt(digitalPinToInterrupt(interruptPinM3), intPinToMode3, FALLING);
+		attachInterrupt(digitalPinToInterrupt(interruptPinM4), intPinToMode4, FALLING);
 
 		/* tft.begin(); */
 		tft.setRotation(1);
@@ -30,10 +30,10 @@
 	
 
 #elif defined(WIN32)
-	void setup_arduino(){}
+	void setupArduino(){}
 #endif
 
-void setup_game()
+void setupGame()
 {
 	Serial.begin(9600);
 #if defined(__AVT_ATmega1028__) || defined(__AVR_ATmega2560__)
@@ -42,17 +42,17 @@ void setup_game()
 	/* main.c || testing.ino */
 
 	/* world.h */
-	levels = get_malloc(sizeof(struct level) * num_levels);
-	 generate_level_structure(cur_level, 0);
+	levels = getMalloc(sizeof(struct level) * numLevels);
+	 generateLevelStructure(curLevel, 0);
 #if defined(__AVT_ATmega1028__) || defined(__AVR_ATmega2560__)
 	Serial.print("LEVEL GENERATED\n");
 #endif
 
 	/* items.h */
-	/* items = get_malloc(sizeof(struct item) * num_global_items); */
-	/* for(int i =0; i<num_global_items; i++) */
+	/* items = getMalloc(sizeof(struct item) * numGlobalItems); */
+	/* for(int i =0; i<numGlobalItems; i++) */
 	/* { */
-	/* 	items[i] = init_item; */
+	/* 	items[i] = initItem; */
 	/* } */
 
 	/* render.h */
@@ -65,12 +65,12 @@ void setup_game()
 
 }
 
-void cleanup_game()
+void cleanupGame()
 {
 	/* main.c || testing.ino */
-	free(error_string);
+	free(errorString);
 	/* render.h */
-	free(game_map);
+	free(gameMap);
 	/* world.h */
 	free(levels);
 	/* items.h */

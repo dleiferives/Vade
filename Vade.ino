@@ -13,27 +13,26 @@
 int _main()
 {
 	tft.begin();
-	setup_game(); // alloc.h
-	setup_arduino(); // alloc.h
-	print_map(levels[cur_level].lcd); //game.h
+	setupGame(); // alloc.h
+	setupArduino(); // alloc.h
+	printMap(levels[curLevel].lcd); //game.h
 
 	//setting up the character
-	struct character player = init_character;
+	struct character player = initCharacter;
 	player.items[0] =1;
 	player.items[1] =0;
 	player.tile = '@';
-	add_item(&player, 2);
-	player.pos_screen = get_r_char('.');
+	addItem(&player, 2);
+	player.posScreen = getRChar('.');
 
 	// gameplay loop
 	while(1)
 	{
-		old_g_time = g_time;
-		handle_input(); //input.h
-		int temp_mode = get_mode(); //input.h
-		int temp_dir = get_dir();   //input.h
-		if(temp_dir == 4)		
-			continue;
+		oldGameTime = gameTime;
+		handleInput(); //input.h
+		int tempMode = getMode(); //input.h
+		int tempDir = getDir();   //input.h
+		
 
 		/* states of the switch statment
 		 *
@@ -46,64 +45,64 @@ int _main()
 		 * case 3 -- move the cursor (for attacking and reading)
 		 * case 4 -- actions! -- does not remove the cursor like case 2 does
 		 */
-		switch(temp_mode)
+		switch(tempMode)
 		{
 			case 1:
-				/* struct pos tmp_pos = levels[cur_level].lcd; */ 
-				if(levels[cur_level].size.y > AUD_HEIGHT)
+				/* struct pos tmp_pos = levels[curLevel].lcd; */ 
+				if(levels[curLevel].size.y > AUD_HEIGHT)
 				{
-					if(temp_dir == 3) levels[cur_level].lcd.y++;
-					if(temp_dir == 2) levels[cur_level].lcd.y--;
+					if(tempDir == 3) levels[curLevel].lcd.y++;
+					if(tempDir == 2) levels[curLevel].lcd.y--;
 				}
-				if(levels[cur_level].size.x > AUD_WIDTH)
+				if(levels[curLevel].size.x > AUD_WIDTH)
 				{
-					if(temp_dir == 0) levels[cur_level].lcd.x++;
-					if(temp_dir == 1) levels[cur_level].lcd.x--;
+					if(tempDir == 0) levels[curLevel].lcd.x++;
+					if(tempDir == 1) levels[curLevel].lcd.x--;
 				}
-				levels[cur_level].lcd.y = (levels[cur_level].lcd.y<0) ? 0 : levels[cur_level].lcd.y;
-				levels[cur_level].lcd.y = (levels[cur_level].lcd.y> levels[cur_level].size.y) ? levels[cur_level].size.y : levels[cur_level].lcd.y;
-				levels[cur_level].lcd.x = (levels[cur_level].lcd.x<0) ? 0 : levels[cur_level].lcd.x;
-				levels[cur_level].lcd.x = (levels[cur_level].lcd.x> levels[cur_level].size.x ) ? levels[cur_level].size.x : levels[cur_level].lcd.x;
-				if(AUD_WIDTH < levels[cur_level].size.x)
+				levels[curLevel].lcd.y = (levels[curLevel].lcd.y<0) ? 0 : levels[curLevel].lcd.y;
+				levels[curLevel].lcd.y = (levels[curLevel].lcd.y> levels[curLevel].size.y) ? levels[curLevel].size.y : levels[curLevel].lcd.y;
+				levels[curLevel].lcd.x = (levels[curLevel].lcd.x<0) ? 0 : levels[curLevel].lcd.x;
+				levels[curLevel].lcd.x = (levels[curLevel].lcd.x> levels[curLevel].size.x ) ? levels[curLevel].size.x : levels[curLevel].lcd.x;
+				if(AUD_WIDTH < levels[curLevel].size.x)
 				{
-					levels[cur_level].lcd.x = (levels[cur_level].lcd.x + AUD_WIDTH > levels[cur_level].size.x ) ? levels[cur_level].size.x - AUD_WIDTH : levels[cur_level].lcd.x;
+					levels[curLevel].lcd.x = (levels[curLevel].lcd.x + AUD_WIDTH > levels[curLevel].size.x ) ? levels[curLevel].size.x - AUD_WIDTH : levels[curLevel].lcd.x;
 				}
-				if(AUD_HEIGHT< levels[cur_level].size.y)
+				if(AUD_HEIGHT< levels[curLevel].size.y)
 				{
-					levels[cur_level].lcd.y = (levels[cur_level].lcd.y + AUD_HEIGHT > levels[cur_level].size.y ) ? levels[cur_level].size.y - AUD_HEIGHT : levels[cur_level].lcd.y;
+					levels[curLevel].lcd.y = (levels[curLevel].lcd.y + AUD_HEIGHT > levels[curLevel].size.y ) ? levels[curLevel].size.y - AUD_HEIGHT : levels[curLevel].lcd.y;
 				}
 				
-				/* if((tmp_pos.x != levels[cur_level].lcd.x) || (tmp_pos.y != levels[cur_level].lcd.y)) */
-					/* levels[cur_level].lcd_old = tmp_pos; */
+				/* if((tmp_pos.x != levels[curLevel].lcd.x) || (tmp_pos.y != levels[curLevel].lcd.y)) */
+					/* levels[curLevel].lcd_old = tmp_pos; */
 				#if defined(__AVT_ATmega1028__) || defined(__AVR_ATmega2560__)
-					/* Serial.print(levels[cur_level].lcd.x); */
-					/* Serial.print(levels[cur_level].lcd.y); */
+					/* Serial.print(levels[curLevel].lcd.x); */
+					/* Serial.print(levels[curLevel].lcd.y); */
 				#endif
-				if(temp_dir != 4)
-					print_map(levels[cur_level].lcd);	
+				if(tempDir != 4)
+					printMap(levels[curLevel].lcd);	
 				
 				break;
 
 			case 2:
 				#if defined(__AVT_ATmega1028__) || defined(__AVR_ATmega2560__)
 					/* tft.setCursor(0,0); */
-					/* tft.print(temp_dir); */
+					/* tft.print(tempDir); */
 
-					/* Serial.println(temp_dir); */
+					/* Serial.println(tempDir); */
 				#endif
-				switch(temp_dir)
+				switch(tempDir)
 				{
 					case 0:
-						move_character(&player,1,0);
+						moveCharacter(&player,1,0);
 						break;
 					case 1:
-						move_character(&player,-1,0);
+						moveCharacter(&player,-1,0);
 						break;
 					case 2:
-						move_character(&player,0,-1);
+						moveCharacter(&player,0,-1);
 						break;
 					case 3:
-						move_character(&player,0,1);
+						moveCharacter(&player,0,1);
 						break;
 					case 4:
 						break;
@@ -111,53 +110,53 @@ int _main()
 				break;
 
 			case 3:
-				switch(temp_dir)
+				switch(tempDir)
 				{
 					case 0:
-						move_cursor(1,0);
+						moveCursor(1,0);
 						break;
 					case 1:
-						move_cursor(-1,0);
+						moveCursor(-1,0);
 						break;
 					case 2:
-						move_cursor(0,-1);
+						moveCursor(0,-1);
 						break;
 					case 3:
-						move_cursor(0,1);
+						moveCursor(0,1);
 						break;
 					case 4:
 						break;
 					}
-				render_cursor();
+				renderCursor();
 				break;
 			case 4:
-				if(temp_dir == 3)
+				if(tempDir == 3)
 				{
 					// take action at player	
-					character_action(&player,to_pos(0,0));
+					characterAction(&player,toPos(0,0));
 				}
-				if(temp_dir == 2)
+				if(tempDir == 2)
 				{
 				  //take action at cursor
-					character_action(&player,to_pos(cursor_pos.x - player.pos_screen.x, cursor_pos.y - player.pos_screen.y));
+					characterAction(&player,toPos(cursorPos.x - player.posScreen.x, cursorPos.y - player.posScreen.y));
 				}
 				break;
 		}
 		// runs if the time has advanced. time does not 
-		if(g_time > old_g_time)
+		if(gameTime > oldGameTime)
 		{
 			/* run entities code */
-			for(int i =0; i < num_mobs; i++)
-				mob_crawl(&mobs[i],player.pos_screen);
+			for(int i =0; i < numMobs; i++)
+				mobCrawl(&mobs[i],player.posScreen);
 		}
 
 		struct mob * mTemp;
-		render_entities(mTemp, num_mobs);
-		render_character(&player);
+		renderEntities(mTemp, numMobs);
+		renderCharacter(&player);
 	}
 	
 	/* deallocate all of it bucco */
-	cleanup_game(); // alloc.h
+	cleanupGame(); // alloc.h
 
 }
 /* Makes either windows or arduino code run */
@@ -171,7 +170,7 @@ int _main()
 	{
 		tft.setCursor(0,0);
 		tft.fillScreen(TFT_BLACK);
-		tft.print(error_string);
+		tft.print(errorString);
 	}
 
 
