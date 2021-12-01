@@ -33,7 +33,7 @@ int _main()
 		int tempMode = getMode(); //input.h
 		int tempDir = getDir();   //input.h
 		
-
+		//test 12
 		/* states of the switch statment
 		 *
 		 * case 1 -- move the screen up down left right
