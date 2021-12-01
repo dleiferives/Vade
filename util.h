@@ -135,6 +135,7 @@ char cursor_icon = '$';
 	struct uint12By2 analogIn;
 	int irPin = 7;
 	long int ir_data;
+	decode_results irResults;
 	int arduino_analog_x = A1;
 	int arduino_analog_y = A2;
 	int arduino_toggle =1;

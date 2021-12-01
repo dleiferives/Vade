@@ -32,7 +32,8 @@ int _main()
 		handle_input(); //input.h
 		int temp_mode = get_mode(); //input.h
 		int temp_dir = get_dir();   //input.h
-		
+		if(temp_dir == 4)		
+			continue;
 
 		/* states of the switch statment
 		 *

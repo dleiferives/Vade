@@ -4,12 +4,19 @@
 	{
 		analogIn.x = 1023 - analogRead(arduino_analog_x); 
     analogIn.y = analogRead(arduino_analog_y); 
-		IrReceiver.decode();
 		return 0;
 	}
 	
 	int get_mode()
 	{
+		/* if(IrReceiver.decode()) */
+		/* { */
+		/* 	if(IrReceiver.decodedIRData.command == 0xC) input_mode =1; */	
+		/* 	if(IrReceiver.decodedIRData.command == 0x18) input_mode =2; */	
+		/* 	if(IrReceiver.decodedIRData.command == 0x5E) input_mode =3; */	
+		/* 	if(IrReceiver.decodedIRData.command == 0x8) input_mode =4; */	
+		/* 	IrReceiver.resume(); */
+		/* } */
 		return input_mode;	
 	}
 
@@ -20,11 +27,22 @@
 		if(analogIn.y < 200) result =0;
 		if(analogIn.x > 800) result =3;
 		if(analogIn.x < 200) result =2;
+		if(IrReceiver.decode())
+		{
+			Serial.print(IrReceiver.decodedIRData.command,HEX);
+			if(IrReceiver.decodedIRData.command == 0x9) result =0;	
+			if(IrReceiver.decodedIRData.command == 0x19) result =3;	
+			if(IrReceiver.decodedIRData.command == 0x7) result =1;	
+			if(IrReceiver.decodedIRData.command == 0x40) result =2;	
+			IrReceiver.resume();
+		}
 		if(result != 4)
 		{
 			Serial.print(analogIn.x);
 			Serial.print(" ");
 			Serial.print(analogIn.y);
+			Serial.print(" ");
+			Serial.print(IrReceiver.decodedIRData.command,HEX);
 			Serial.print("\n");
 		}
 		return result;
