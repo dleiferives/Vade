@@ -1,4 +1,4 @@
-struct level gen_level(int id, int diff, int width, int height, int mobs)
+struct level gen_level(int id, int diff, int width, int height)
 {
 	struct level l;
 	l.id       = id;
@@ -6,6 +6,7 @@ struct level gen_level(int id, int diff, int width, int height, int mobs)
 	l.size.x   = width;
 	l.size.y   = height;
 	l.lcd      = init_pos;
+	l.lcd_old  = init_pos;
 	return l;
 }
 
@@ -70,7 +71,6 @@ int flood_char(struct level * l,char c, struct pos p)
 {
 	//slower code so not to use up memory, since the stack will fill up with a recursive function of this size... we will use something far slower! iteraton
 	//check if the character is illegal!
-	print_map(p);
 	game_map[get_level_p(l,p.x,p.y)] = c;
 	int reset =0;
 	for(int i =0; i<(l->size.x * l->size.y); i++)
@@ -119,7 +119,7 @@ int flood_char(struct level * l,char c, struct pos p)
 		if(reset ==1)
 			i =-1;
 	}
-	print_map(p);
+	/* print_map(p); */
 	return 0;
 }
 
@@ -146,8 +146,8 @@ int gen_rand_room(struct level * l)
 	//seed the random num generation
 	seed_rand();
 	// generate based off of random width height x and y then build the room
-	int w = get_rand(l[0].size.x/10 +10 , 10);
-	int h = get_rand(l[0].size.y/8+10 , 10);
+	int w = get_rand(l[0].size.x/10 +2 , 2);
+	int h = get_rand(l[0].size.y/8+2 , 2);
 	int x = get_rand(l[0].size.x, 0);
 	int y = get_rand(l[0].size.x, 0);
 	int result = generate_room(l,x,y,w,h,1);
@@ -240,23 +240,27 @@ struct pos generate_level_structure(int id, int diff)
 	//dificulty 0 - 1000
 	//width 30 - 300
 	//height 20 - 200
-	/* int diff_width = pow(2.7, ((float)diff/(float)2) ) + 19; */
-	/* int diff_height = pow(2.7, ((float)diff/(float)2) )+ 19; */
-	int diff_width = 50; 
-	int diff_height = 50; 
-	/* int diff_mobs = ((double) diff_width * (double) diff_height) * ((double)1.0- ((double) (((double)10.0)/((double) diff + (double) 10.0)))); */
-	int diff_mobs = 1; 
+	int diff_width = pow(2.7, ((float)diff/(float)2) ) + 29;
+	int diff_height = pow(2.7, ((float)diff/(float)2) ) + 10;
+	/* int diff_width = 10; */ 
+	/* int diff_height = 10; */ 
+	int diff_mobs = ((double) diff_width * (double) diff_height) * ((double)1.0- ((double) (((double)10.0)/((double) diff + (double) 10.0))));
 	int diff_rooms = pow(2.5, ((float)diff/(float)2) ) + 8;
 
 	if(diff_width > map_size_x)
 		diff_width = map_size_x;
 	if(diff_height > map_size_y)
 		diff_height = map_size_y;
-	levels[id] = gen_level(id,diff, diff_width, diff_height, diff_mobs);
+	if(diff_mobs > max_mobs)
+		diff_mobs = max_mobs;
+	num_mobs = diff_mobs;
+
+	levels[id] = gen_level(id,diff, diff_width, diff_height);
 
 	for(int i=0; i < diff_width * diff_height; i++) {
 		game_map[i] = 0;
 	}
+
 	for(int j=0; j< diff_rooms;j++)
 	{
 			gen_rand_room(&levels[id]);	
@@ -294,14 +298,25 @@ struct pos generate_level_structure(int id, int diff)
 			game_map[i] = '.';
 	}
 
-	for(int y=0; y< diff_height; y++)
+	struct pos exit = get_r_char('.');
+	game_map[get_level_p(&levels[id],exit.x,exit.y)] = '+';
+
+
+	// put mobs onto the level
+	for(int i =0; i < diff_mobs; i++)
 	{
-		for(int x=0; x < diff_width; x++)
-		{
-			Serial.print(game_map[y * diff_width + x]);
-		}
+		mobs[i].id =i+1;
+		mobs[i].pos_screen = get_r_char('.');
+		Serial.print("MOBS --");
+		Serial.print("m");
+		Serial.print(mobs[i].id);
+		Serial.print(" ");
+		Serial.print(mobs[i].pos_screen.x);
+		Serial.print(",");
+		Serial.print(mobs[i].pos_screen.y);
 		Serial.print("\n");
 	}
+
 
 }
 
@@ -312,7 +327,15 @@ void next_level(struct character * player)
 	generate_level_structure(cur_level,cur_level);
 	player->pos_screen = get_r_char('.');
 	levels[cur_level].lcd = player->pos_screen;
-	levels[cur_level].lcd.x += AUD_WIDTH /2;
-	levels[cur_level].lcd.y += AUD_HEIGHT /2;
+	levels[cur_level].lcd.x = 0;
+	levels[cur_level].lcd.y = 0;
+#if defined(__AVT_ATmega1028__) || defined(__AVR_ATmega2560__)
+	Serial.print("\nMap size");
+	Serial.print(levels[cur_level].size.x);
+	Serial.print(",");
+	Serial.print(levels[cur_level].size.y);
+	Serial.print("\n");
+#endif
 	print_map(levels[cur_level].lcd);
+
 }

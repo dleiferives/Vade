@@ -20,10 +20,13 @@
 		if(analogIn.y < 200) result =0;
 		if(analogIn.x > 800) result =3;
 		if(analogIn.x < 200) result =2;
-    Serial.print(analogIn.x);
-    Serial.print(" ");
-    Serial.print(analogIn.y);
-    Serial.print("\n");
+		if(result != 4)
+		{
+			Serial.print(analogIn.x);
+			Serial.print(" ");
+			Serial.print(analogIn.y);
+			Serial.print("\n");
+		}
 		return result;
 	}
 #elif defined(WIN32)

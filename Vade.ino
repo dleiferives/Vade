@@ -33,6 +33,7 @@ int _main()
 		int temp_mode = get_mode(); //input.h
 		int temp_dir = get_dir();   //input.h
 		
+
 		/* states of the switch statment
 		 *
 		 * case 1 -- move the screen up down left right
@@ -47,27 +48,47 @@ int _main()
 		switch(temp_mode)
 		{
 			case 1:
-				if(temp_dir == 3) levels[cur_level].lcd.y++;
-				if(temp_dir == 2) levels[cur_level].lcd.y--;
-				if(temp_dir == 0) levels[cur_level].lcd.x++;
-				if(temp_dir == 1) levels[cur_level].lcd.x--;
+				/* struct pos tmp_pos = levels[cur_level].lcd; */ 
+				if(levels[cur_level].size.y > AUD_HEIGHT)
+				{
+					if(temp_dir == 3) levels[cur_level].lcd.y++;
+					if(temp_dir == 2) levels[cur_level].lcd.y--;
+				}
+				if(levels[cur_level].size.x > AUD_WIDTH)
+				{
+					if(temp_dir == 0) levels[cur_level].lcd.x++;
+					if(temp_dir == 1) levels[cur_level].lcd.x--;
+				}
 				levels[cur_level].lcd.y = (levels[cur_level].lcd.y<0) ? 0 : levels[cur_level].lcd.y;
-				levels[cur_level].lcd.y = (levels[cur_level].lcd.y> levels[cur_level].size.y ) ? levels[cur_level].size.y  : levels[cur_level].lcd.y;
+				levels[cur_level].lcd.y = (levels[cur_level].lcd.y> levels[cur_level].size.y) ? levels[cur_level].size.y : levels[cur_level].lcd.y;
 				levels[cur_level].lcd.x = (levels[cur_level].lcd.x<0) ? 0 : levels[cur_level].lcd.x;
-				levels[cur_level].lcd.x = (levels[cur_level].lcd.x> levels[cur_level].size.x ) ? levels[cur_level].size.x  : levels[cur_level].lcd.x;
+				levels[cur_level].lcd.x = (levels[cur_level].lcd.x> levels[cur_level].size.x ) ? levels[cur_level].size.x : levels[cur_level].lcd.x;
+				if(AUD_WIDTH < levels[cur_level].size.x)
+				{
+					levels[cur_level].lcd.x = (levels[cur_level].lcd.x + AUD_WIDTH > levels[cur_level].size.x ) ? levels[cur_level].size.x - AUD_WIDTH : levels[cur_level].lcd.x;
+				}
+				if(AUD_HEIGHT< levels[cur_level].size.y)
+				{
+					levels[cur_level].lcd.y = (levels[cur_level].lcd.y + AUD_HEIGHT > levels[cur_level].size.y ) ? levels[cur_level].size.y - AUD_HEIGHT : levels[cur_level].lcd.y;
+				}
+				
+				/* if((tmp_pos.x != levels[cur_level].lcd.x) || (tmp_pos.y != levels[cur_level].lcd.y)) */
+					/* levels[cur_level].lcd_old = tmp_pos; */
 				#if defined(__AVT_ATmega1028__) || defined(__AVR_ATmega2560__)
-					Serial.print(levels[cur_level].lcd.x);
-					Serial.print(levels[cur_level].lcd.y);
+					/* Serial.print(levels[cur_level].lcd.x); */
+					/* Serial.print(levels[cur_level].lcd.y); */
 				#endif
 				if(temp_dir != 4)
-					print_map(player.pos_screen);	
+					print_map(levels[cur_level].lcd);	
 				
 				break;
 
 			case 2:
 				#if defined(__AVT_ATmega1028__) || defined(__AVR_ATmega2560__)
-					tft.setCursor(0,0);
-					tft.print(temp_dir);
+					/* tft.setCursor(0,0); */
+					/* tft.print(temp_dir); */
+
+					/* Serial.println(temp_dir); */
 				#endif
 				switch(temp_dir)
 				{
@@ -89,8 +110,24 @@ int _main()
 				break;
 
 			case 3:
-				
-			//cursors n stuff
+				switch(temp_dir)
+				{
+					case 0:
+						move_cursor(1,0);
+						break;
+					case 1:
+						move_cursor(-1,0);
+						break;
+					case 2:
+						move_cursor(0,-1);
+						break;
+					case 3:
+						move_cursor(0,1);
+						break;
+					case 4:
+						break;
+					}
+				render_cursor();
 				break;
 			case 4:
 				if(temp_dir == 3)
@@ -100,8 +137,8 @@ int _main()
 				}
 				if(temp_dir == 2)
 				{
-					next_level(&player);
-
+				  //take action at cursor
+					character_action(&player,to_pos(cursor_pos.x - player.pos_screen.x, cursor_pos.y - player.pos_screen.y));
 				}
 				break;
 		}
@@ -109,10 +146,13 @@ int _main()
 		if(g_time > old_g_time)
 		{
 			/* run entities code */
+			for(int i =0; i < num_mobs; i++)
+				mob_crawl(&mobs[i],player.pos_screen);
 		}
 
+		struct mob * mTemp;
+		render_entities(mTemp, num_mobs);
 		render_character(&player);
-
 	}
 	
 	/* deallocate all of it bucco */

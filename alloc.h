@@ -40,8 +40,6 @@ void setup_game()
 	Serial.print("GAME SETUP STARTED\n");
 #endif
 	/* main.c || testing.ino */
-	/* game_map = get_malloc(sizeof(char) * map_size_x * map_size_y); */
-	error_string = get_malloc(sizeof(char) * 100);
 
 	/* world.h */
 	levels = get_malloc(sizeof(struct level) * num_levels);

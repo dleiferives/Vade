@@ -14,7 +14,7 @@
 #define PLAYER_INVENTORY_SIZE 20
 #define MOB_INV_BASE 1
 #define AUD_WIDTH  60 
-#define AUD_HEIGHT 30 
+#define AUD_HEIGHT 20 
 
 /* <-- struct definitions --> */
 struct pos
@@ -59,13 +59,14 @@ struct character
 struct mob
 {
 	int id;
-	struct stats base_stats;
-  struct stats comp_stats;
+	/* struct stats base_stats; */
+  /* struct stats comp_stats; */
 	struct pos pos_screen;
+	struct pos pos_screen_old;
 	int nice;
 	int ranged;
 	char tile;
-}const init_mob = {0,init_stats, init_stats, init_pos,0,0,0};
+}const init_mob = {0, init_pos,init_pos,0,0,'0'};
 
 struct cursor
 {
@@ -79,6 +80,7 @@ struct level
 	int diff;
 	struct pos size;
 	struct pos lcd;
+	struct pos lcd_old;
 };
 
 struct item
@@ -111,9 +113,12 @@ int num_levels = 20;
 int cur_level  = 0;
 struct level * levels;
 
-char game_map[6400];
-int map_size_x = 80;
-int map_size_y = 80;
+char game_map[2400];
+int map_size_x = 60;
+int map_size_y = 40;
+struct mob mobs[100];
+int max_mobs = 100;
+int num_mobs = 0;
 struct pos map_tl;
 int game_font =1;
 
@@ -121,6 +126,7 @@ unsigned long g_time =0;// global time
 unsigned long old_g_time=0;  // the previous global time
 
 struct pos cursor_pos;
+struct pos cursor_pos_old;
 char cursor_icon = '$';
 
 
@@ -174,17 +180,29 @@ char get_char(struct level *l, int x, int y);
 
 int get_level_p(struct level * l, int x, int y);
 
+void render_entities(struct mob * m, int num_mobs);
+
 void next_level(struct character * player);
 struct pos to_pos(int x, int y)
 {
 	struct pos result = {x,y};
 	return result;
 }
+
+struct pos abs_pos_dif(struct pos p1, struct pos p2)
+{
+	struct pos result = {p1.x-p2.y,p1.x-p2.y};
+	result.x = (result.x > 0) ? result.x : -result.x;
+	result.y = (result.y > 0) ? result.y : -result.y;
+	return result;
+}
+
 #if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
 	void seed_rand()
 	{
 		randomSeed(analogRead(0));
 	}
+
 	int get_rand(int max, int min)
 	{
 		return random(min,max);	
@@ -196,18 +214,21 @@ struct pos to_pos(int x, int y)
 		delayMicroseconds(10);
 		while(digitalRead(interruptPinM1) == LOW){}
 	}
+
 	void int_pin_to_mode_2()
 	{
 		input_mode = 2;	
 		delayMicroseconds(10);
 		while(digitalRead(interruptPinM2) == LOW){}
 	}
+
 	void int_pin_to_mode_3()
 	{
 		input_mode = 3;	
 		delayMicroseconds(10);
 		while(digitalRead(interruptPinM3) == LOW){}
 	}
+
 	void int_pin_to_mode_4()
 	{
 		input_mode = 4;	
@@ -216,10 +237,10 @@ struct pos to_pos(int x, int y)
 	}
 #elif defined(WIN32)
 	void seed_rand()
-{
-	time_t rand_time;
-	srand((unsigned) time(&rand_time));
-}
+	{
+		time_t rand_time;
+		srand((unsigned) time(&rand_time));
+	}
  int get_rand(int max, int min)
   {
     return (rand() % (max-min)) + min;
