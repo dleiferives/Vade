@@ -27,6 +27,15 @@
 		if(analogIn.y < 200) result =0;
 		if(analogIn.x > 800) result =3;
 		if(analogIn.x < 200) result =2;
+		if(IrReceiver.decode())
+		{
+			Serial.print(IrReceiver.decodedIRData.command,HEX);
+			if(IrReceiver.decodedIRData.command == 0x9) result =0;	
+			if(IrReceiver.decodedIRData.command == 0x19) result =3;	
+			if(IrReceiver.decodedIRData.command == 0x7) result =1;	
+			if(IrReceiver.decodedIRData.command == 0x40) result =2;	
+			IrReceiver.resume();
+		}
 		// if not four return that as dir
 		if(result != 4)
 		{

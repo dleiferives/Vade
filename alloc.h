@@ -4,10 +4,12 @@
 
 	void setupArduino()
 	{
-		tft.begin(); 																	// start the lcd library
-    Serial.begin(9600); 													// start the arduino serial library
-		Serial.println("ARDUINO LOADED!"); 						// print that the arduino loaded 
-		IrReceiver.begin(irPin, ENABLE_LED_FEEDBACK); // start the ir library
+		tft.begin(); 																				 // start the lcd library
+		tft.setRotation(1);                  // rotate the screen so that it looks better
+		drawIcon(vade_icon, 0, 0, vadeWidth, vadeHeight,4);  // drawing the splash screen
+    Serial.begin(9600); 												    		 // start the arduino serial library
+		Serial.println("ARDUINO LOADED!"); 									 // print that the arduino loaded 
+		IrReceiver.begin(irPin, ENABLE_LED_FEEDBACK); 			 // start the ir library
 
 		//Setting up the pins to be used
 		pinMode(interruptPinM1,INPUT_PULLUP);
@@ -20,7 +22,6 @@
 		attachInterrupt(digitalPinToInterrupt(interruptPinM3), intPinToMode3, FALLING);
 		attachInterrupt(digitalPinToInterrupt(interruptPinM4), intPinToMode4, FALLING);
 
-		tft.setRotation(1);                  // rotate the screen so that it looks better
 		randomSeed(analogRead(0));           // seed the random number function
 		int padding = tft.textWidth("9", 2); // get the width of the text in pixels
 		tft.setTextPadding(padding);         // fixes full screen redaws

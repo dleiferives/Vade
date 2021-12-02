@@ -16,6 +16,10 @@ int _main()
 	setupGame();                    		 // all of the game setup functions    -- alloc.h
 	setupArduino();                			 // all of the arduion setup functions -- alloc.h
   generateLevelStructure(curLevel, 0); // generate the first level for the game 
+	while(1)
+	{ handleInput(); 
+		if(getDir() != 4) break;
+	}  // pause execution while waiting for input
 	printMap(levels[curLevel].lcd); 		 //game.h
 
 	//setting up the character

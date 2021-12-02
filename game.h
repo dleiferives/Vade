@@ -356,7 +356,7 @@ void renderCharacter(struct character * player)
 	// prints to the screen
 	tft.print(player->tile);
 	// delay to make the game playable by humans ;-;
-	delay(300);
+	delay(100);
 }
 
 void renderCursor()

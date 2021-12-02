@@ -2,6 +2,8 @@
 #if defined(__AVT_ATmega1028__) || defined(__AVR_ATmega2560__)
  #include <TFT_HX8357.h> // Hardware-specific library for lcd
  #include <IRremote.h>   // for ir remote
+ #include <avr/pgmspace.h>
+ #include "vade_icon.h"
   // Invoke library
   TFT_HX8357 tft = TFT_HX8357();	
 
@@ -257,6 +259,23 @@ struct pos absPosDif(struct pos p1, struct pos p2)
 		while(digitalRead(interruptPinM4) == LOW){}
 	}
 
+	// redner game startup icon
+	void drawIcon(const unsigned short* icon, int16_t xf, int16_t yf, int8_t width, int8_t height, int8_t scaler)
+	{
+		for(int y =0 ; y<height; y++)
+		{
+			for(int x =0; x<width; x++)
+			{
+				for(int i=0; i<scaler; i++)
+				{
+					for(int j=0; j<scaler; j++)
+					{
+						tft.drawPixel(xf+(x*scaler)+i,yf+(y*scaler)+j,pgm_read_word(&icon[y * width + x]));
+					}
+				}
+			}
+		}
+	}
 #elif defined(WIN32)
 	// universal randomseed func
 	void seedRand()
