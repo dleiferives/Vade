@@ -1,39 +1,41 @@
-#include "util.h"
-#include "game.h"
-// entities
-//render 
-// itmes
-//combat
-#include "world.h"
-#include "alloc.h"
-#include "input.h"
+/* Dylan Leifer-Ives -- Vade
+ * EE-151 Janine's section
+ * A small rougelike game that is meant to be played on the Arduino Mega
+ * Inspired by NetHack
+ */
 
-/* levels -- pointer array of type level */
+#include "util.h"   // global variables & when neccesary functions & libraries
+#include "game.h"   // functions to handle rendering movment and combat
+#include "world.h"  // functions to setup game world
+#include "alloc.h"  // functions to setup and cleanup the game
+#include "input.h"  // Handles player input
 
+/* Main function -- called from either windows or arduino */
 int _main()
 {
-	tft.begin();
-	setupGame(); // alloc.h
-	setupArduino(); // alloc.h
-	printMap(levels[curLevel].lcd); //game.h
+	setupGame();                    		 // all of the game setup functions    -- alloc.h
+	setupArduino();                			 // all of the arduion setup functions -- alloc.h
+  generateLevelStructure(curLevel, 0); // generate the first level for the game 
+	printMap(levels[curLevel].lcd); 		 //game.h
 
 	//setting up the character
 	struct character player = initCharacter;
 	player.items[0] =1;
 	player.items[1] =0;
 	player.tile = '@';
-	addItem(&player, 2);
+	add_item(&player, 2);
 	player.posScreen = getRChar('.');
 
 	// gameplay loop
 	while(1)
 	{
+		// mob movment is determined by ticks
+		// here we check if the game has ticked forward in time
 		oldGameTime = gameTime;
-		handleInput(); //input.h
-		int tempMode = getMode(); //input.h
-		int tempDir = getDir();   //input.h
+		handleInput(); // gets the input from the buttons/ IR -- input.h
+		int tempMode = getMode(); // gets mode button -- input.h
+		int tempDir = getDir();   // gets dir on joystick or ir -- input.h
 		
-		//test 12
 		/* states of the switch statment
 		 *
 		 * case 1 -- move the screen up down left right
@@ -47,18 +49,21 @@ int _main()
 		 */
 		switch(tempMode)
 		{
+			/* Move the screen around on the level */
 			case 1:
-				/* struct pos tmp_pos = levels[curLevel].lcd; */ 
+				/* if the screen can move, change the pos of top left Y*/
 				if(levels[curLevel].size.y > AUD_HEIGHT)
 				{
 					if(tempDir == 3) levels[curLevel].lcd.y++;
 					if(tempDir == 2) levels[curLevel].lcd.y--;
 				}
+				/* if the screen can move, change the pos of the top left X */
 				if(levels[curLevel].size.x > AUD_WIDTH)
 				{
 					if(tempDir == 0) levels[curLevel].lcd.x++;
 					if(tempDir == 1) levels[curLevel].lcd.x--;
 				}
+				/* locking the lcd to the lcd size so we dont get phanotm player movement */
 				levels[curLevel].lcd.y = (levels[curLevel].lcd.y<0) ? 0 : levels[curLevel].lcd.y;
 				levels[curLevel].lcd.y = (levels[curLevel].lcd.y> levels[curLevel].size.y) ? levels[curLevel].size.y : levels[curLevel].lcd.y;
 				levels[curLevel].lcd.x = (levels[curLevel].lcd.x<0) ? 0 : levels[curLevel].lcd.x;
@@ -72,24 +77,14 @@ int _main()
 					levels[curLevel].lcd.y = (levels[curLevel].lcd.y + AUD_HEIGHT > levels[curLevel].size.y ) ? levels[curLevel].size.y - AUD_HEIGHT : levels[curLevel].lcd.y;
 				}
 				
-				/* if((tmp_pos.x != levels[curLevel].lcd.x) || (tmp_pos.y != levels[curLevel].lcd.y)) */
-					/* levels[curLevel].lcd_old = tmp_pos; */
-				#if defined(__AVT_ATmega1028__) || defined(__AVR_ATmega2560__)
-					/* Serial.print(levels[curLevel].lcd.x); */
-					/* Serial.print(levels[curLevel].lcd.y); */
-				#endif
+				/* if the player has done a directional movment... update the screen accordingly */
 				if(tempDir != 4)
 					printMap(levels[curLevel].lcd);	
 				
 				break;
-
+			/* Move the player */
 			case 2:
-				#if defined(__AVT_ATmega1028__) || defined(__AVR_ATmega2560__)
-					/* tft.setCursor(0,0); */
-					/* tft.print(tempDir); */
-
-					/* Serial.println(tempDir); */
-				#endif
+			/* Quite literally based on the direction, move the character relative to itself */
 				switch(tempDir)
 				{
 					case 0:
@@ -110,6 +105,7 @@ int _main()
 				break;
 
 			case 3:
+			/* move the cursor relative to itself and then render it */
 				switch(tempDir)
 				{
 					case 0:
@@ -130,6 +126,8 @@ int _main()
 				renderCursor();
 				break;
 			case 4:
+			/* the actions the player can take */
+			/* should be a switch but right now there are only two possibilities */
 				if(tempDir == 3)
 				{
 					// take action at player	
@@ -145,13 +143,15 @@ int _main()
 		// runs if the time has advanced. time does not 
 		if(gameTime > oldGameTime)
 		{
-			/* run entities code */
+			// Run the entities code
 			for(int i =0; i < numMobs; i++)
 				mobCrawl(&mobs[i],player.posScreen);
 		}
 
+		// render the entities
 		struct mob * mTemp;
 		renderEntities(mTemp, numMobs);
+		// render the character
 		renderCharacter(&player);
 	}
 	
@@ -168,6 +168,7 @@ int _main()
 
 	void loop()
 	{
+		//error screen
 		tft.setCursor(0,0);
 		tft.fillScreen(TFT_BLACK);
 		tft.print(errorString);

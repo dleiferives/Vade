@@ -1,3 +1,4 @@
+// function that sets level to its default values 
 struct level genLevel(int id, int diff, int width, int height)
 {
 	struct level l;
@@ -10,12 +11,13 @@ struct level genLevel(int id, int diff, int width, int height)
 	return l;
 }
 
-
+// get integer pos based on level size in gameMap
 int getLevelP(struct level * l, int x, int y)
 {
 	return (y*l[0].size.x) + x;
 }
 
+// gets the char in game map for a given x and y
 char getChar(struct level * l, int x, int y)
 {
 	if(x>=l[0].size.x) return 0;
@@ -25,6 +27,7 @@ char getChar(struct level * l, int x, int y)
 	return gameMap[getLevelP(l,x,y)];
 }
 
+// finds the distance between to chars in game map
 int charDist(struct level * l, int pos, int pos2)
 {
 	int resultx1 = (pos % l[0].size.x);
@@ -32,10 +35,12 @@ int charDist(struct level * l, int pos, int pos2)
 	int resultx2 = (pos2 % l[0].size.x);
 	int resulty2 = pos2 / l[0].size.x;
 
+	// literally distance formula
 	int dist = sqrt(((resultx2-resultx1) * (resultx2-resultx1)) + ((resulty2-resulty1) * (resulty2-resulty1)));
 	return dist;
 }
 
+// get random character in the map of type c
 struct pos getRChar(char c)
 {
 	// randomize level generation
@@ -50,6 +55,7 @@ struct pos getRChar(char c)
 	int num2 = getRand(num,1);
 	//get the pid of the random character
 	num =0;
+	// find the loc of that pid
 	for(int i =0; i <levels[curLevel].size.x * levels[curLevel].size.y; i++)
 	{
 		if(gameMap[i] == c) num++;
@@ -67,12 +73,14 @@ struct pos getRChar(char c)
 	return result;
 }
 
+// a function that changes all chars at pos that connect to one 
 int floodChar(struct level * l,char c, struct pos p)
 {
 	//slower code so not to use up memory, since the stack will fill up with a recursive function of this size... we will use something far slower! iteraton
 	//check if the character is illegal!
 	gameMap[getLevelP(l,p.x,p.y)] = c;
 	int reset =0;
+	// iterate through level 
 	for(int i =0; i<(l->size.x * l->size.y); i++)
 	{
 		reset = 0;
@@ -98,7 +106,7 @@ int floodChar(struct level * l,char c, struct pos p)
 				reset =1;
 			}
 		}
-
+		// check the char to the right
 		if(((i + 1) < (l->size.x * l->size.y)) && ( ((i+1)/l->size.x) == (i/l->size.x)))
 		{
 			if((gameMap[i + 1] == 1) && (gameMap[i] == 2))
@@ -108,6 +116,7 @@ int floodChar(struct level * l,char c, struct pos p)
 			}
 		}
 
+		// check the char to the left
 		if(((i - 1) < (l->size.x * l->size.y)) && ( ((i-1)/l->size.x) == (i/l->size.x)))
 		{
 			if((gameMap[i - 1] == 1) && (gameMap[i] == 2))
@@ -116,6 +125,8 @@ int floodChar(struct level * l,char c, struct pos p)
 				reset =1;
 			}
 		}
+
+		// if any of the chars have been updated, then restart the loop through the level 
 		if(reset ==1)
 			i =-1;
 	}
@@ -129,6 +140,7 @@ int floodChar(struct level * l,char c, struct pos p)
 /* 2 = other room hit, redrawing */
 int generateRoom(struct level * l, unsigned int roomX, unsigned int roomY, unsigned int width, unsigned int height, char c)
 {
+	// if too big or too far over
 	if((roomX + width) > l[0].size.x) return 0;
 	if((roomY + height) > l[0].size.y) return 0;
 	for(int y = 0; y<height; y++)
@@ -141,6 +153,8 @@ int generateRoom(struct level * l, unsigned int roomX, unsigned int roomY, unsig
 	return 1;
 }
 
+
+// a function that generates a random room
 int genRandRoom(struct level * l)
 {
 	//seed the random num generation
@@ -151,11 +165,13 @@ int genRandRoom(struct level * l)
 	int x = getRand(l[0].size.x, 0);
 	int y = getRand(l[0].size.x, 0);
 	int result = generateRoom(l,x,y,w,h,1);
+	// if room errored, try again -- could use up memory... but it should not be called too many times
 	if(result == 0) genRandRoom(l);
 	return result;
 }
 
 
+// a function that connects disparate rooms
 int generatePath(struct level * l)
 {
 	//seed random number generation
@@ -174,40 +190,49 @@ int generatePath(struct level * l)
 		return 1;
 	
 	// generate the paths between them
-	int dx = p2.x - p1.x;
-	int dy = p2.y - p1.y;
-  int xSign = (dx > 0) ? 1 : -1;
-  int ySign = (dy > 0) ? 1 : -1;
-	char c1 = 1;
-	char c2 = 2;
+	int dx = p2.x - p1.x; // change in x
+	int dy = p2.y - p1.y; // change in y
+  int xSign = (dx > 0) ? 1 : -1; // abs change x
+  int ySign = (dy > 0) ? 1 : -1; // abs change y
+	char c1 = 1; // char 1
+	char c2 = 2; // char 2
 
 	
-	int cursorX = p1.x;
-	int cursorY = p1.y;
+	int cursorX = p1.x; // pos p1x -> cursor
+	int cursorY = p1.y; // pos p1y -> cursor
+	// for the y's
 	for(int y =0; y < (dy * ySign); y++)
 	{
+		// if it is legal
 		char tmpChar = gameMap[getLevelP(l,cursorX,cursorY)];
 			if((tmpChar != c1) && (tmpChar !=c2))
 			{
+				// set it to the map
 				gameMap[getLevelP(l,cursorX,cursorY)] = 3; 
 			}
 		cursorY += ySign;
+		// iterate on y
 	}
 
+	// for the x's
 	for(int x =0; x < (dx * xSign); x++)
 	{
+		// if it is legal
 			char tmpChar = gameMap[getLevelP(l,cursorX,cursorY)];
 			if((tmpChar != c1) && (tmpChar !=c2))
 			{
+				// set it to the map
 				gameMap[getLevelP(l,cursorX,cursorY)] = 3; 
 			}
 		cursorX += xSign;
+		// iterate on x
 	}
 
 	return 0;
 }
 
 
+// a function that resets eveything in map to 0 or 1
 int normalizeLevel(struct level * l)
 {
 	for(int i=0; i < (l->size.x * l->size.y);i++)
@@ -220,6 +245,7 @@ int normalizeLevel(struct level * l)
 	return 0;
 }
 
+// a function that forces a path between all given rooms
 int generatePaths(struct level *l)
 {
 	while(generatePath(l) == 0)
@@ -232,18 +258,16 @@ int generatePaths(struct level *l)
 /* returns the position of the player in the new level */
 struct pos generateLevelStructure(int id, int diff)
 {
+	// set the map a new
 	resetMap();
 	struct pos result;
-	//dificulty 0 - 1000
-	//width 30 - 300
-	//height 20 - 200
+	// these are exponential functions to make the game exponentially harder
 	int diffWidth = pow(2.7, ((float)diff/(float)2) ) + 29;
 	int diffHeight = pow(2.7, ((float)diff/(float)2) ) + 10;
-	/* int diffWidth = 10; */ 
-	/* int diffHeight = 10; */ 
 	int diffMobs = ((double) diffWidth * (double) diffHeight) * ((double)1.0- ((double) (((double)10.0)/((double) diff + (double) 10.0))));
 	int diffRooms = pow(2.5, ((float)diff/(float)2) ) + 8;
 
+	// these are locks so that only legal memory is read
 	if(diffWidth > mapSizeX)
 		diffWidth = mapSizeX;
 	if(diffHeight > mapSizeY)
@@ -252,18 +276,23 @@ struct pos generateLevelStructure(int id, int diff)
 		diffMobs = maxMobs;
 	numMobs = diffMobs;
 
+	// generate the level
 	levels[id] = genLevel(id,diff, diffWidth, diffHeight);
 
+	// reset the map once again in level size
 	for(int i=0; i < diffWidth * diffHeight; i++) {
 		gameMap[i] = 0;
 	}
 
+	// generate rooms by diffRooms
 	for(int j=0; j< diffRooms;j++)
 	{
 			genRandRoom(&levels[id]);	
 	}
 
+	//generate paths 
 	generatePaths(&levels[id]);
+	// change it to '.' and 'A' from 0 and 1 so next code runs
 	for(int i =0; i<(diffWidth * diffHeight); i++)
 	{
 		if(gameMap[i] == 0)
@@ -272,6 +301,7 @@ struct pos generateLevelStructure(int id, int diff)
 			gameMap[i] = 'A';
 	}
 
+	// iterate through level
 	struct level * l = &levels[id];
 	for(int y =0; y < diffHeight; y++)
 	{
@@ -279,6 +309,7 @@ struct pos generateLevelStructure(int id, int diff)
 		{
 			if((getChar(l,x,y) == '.'))
 			{
+				// if empty next to floor put a wall
 				if((getChar(l,x+1,y) > '.') || (getChar(l,x-1,y) > '.') || (getChar(l,x,y+1) > '.') || (getChar(l,x,y-1) > '.'))
 				{
 					gameMap[getLevelP(l,x,y)] = '#';
@@ -287,6 +318,7 @@ struct pos generateLevelStructure(int id, int diff)
 		}
 	}
 
+	// change it to look sleek 
 	for(int i=0; i<(diffWidth*diffHeight); i++)
 	{
 		if(gameMap[i] == '.')
@@ -295,6 +327,7 @@ struct pos generateLevelStructure(int id, int diff)
 			gameMap[i] = '.';
 	}
 
+	// set the exit position of the map to be '+' the trap door
 	struct pos exit = getRChar('.');
 	gameMap[getLevelP(&levels[id],exit.x,exit.y)] = '+';
 
@@ -304,35 +337,44 @@ struct pos generateLevelStructure(int id, int diff)
 	{
 		mobs[i].id =i+1;
 		mobs[i].posScreen = getRChar('.');
-		Serial.print("MOBS --");
-		Serial.print("m");
-		Serial.print(mobs[i].id);
-		Serial.print(" ");
-		Serial.print(mobs[i].posScreen.x);
-		Serial.print(",");
-		Serial.print(mobs[i].posScreen.y);
-		Serial.print("\n");
+		if(false)
+		{
+			Serial.print("MOBS --");
+			Serial.print("m");
+			Serial.print(mobs[i].id);
+			Serial.print(" ");
+			Serial.print(mobs[i].posScreen.x);
+			Serial.print(",");
+			Serial.print(mobs[i].posScreen.y);
+			Serial.print("\n");
+		}
 	}
 
 
 }
 
+// a function that creates the next level for the player
 void nextLevel(struct character * player)
 {
 	/* destroy_level(&levels[curLevel]); */
+	// make the level higher
 	curLevel +=1;		
+	// generate the level
 	generateLevelStructure(curLevel,curLevel);
+	// get player pos rand on level on floor
 	player->posScreen = getRChar('.');
 	levels[curLevel].lcd = player->posScreen;
+	//reset lcd pos
 	levels[curLevel].lcd.x = 0;
 	levels[curLevel].lcd.y = 0;
 #if defined(__AVT_ATmega1028__) || defined(__AVR_ATmega2560__)
+	// print the map size to serial
 	Serial.print("\nMap size");
 	Serial.print(levels[curLevel].size.x);
 	Serial.print(",");
 	Serial.print(levels[curLevel].size.y);
 	Serial.print("\n");
 #endif
+	// print the new level to the screen
 	printMap(levels[curLevel].lcd);
-
 }
