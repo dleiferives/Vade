@@ -259,7 +259,7 @@ struct pos absPosDif(struct pos p1, struct pos p2)
 		while(digitalRead(interruptPinM4) == LOW){}
 	}
 
-	// redner game startup icon
+	// render game startup icon
 	void drawIcon(const unsigned short* icon, int16_t xf, int16_t yf, int8_t width, int8_t height, int8_t scaler)
 	{
 		for(int y =0 ; y<height; y++)
